@@ -1,4 +1,5 @@
 library(shiny)
+library(scales)
 
 ############################################################
 ## Set up the gamma-distributed population
@@ -80,7 +81,7 @@ server <- function(input, output) {
     
     # sample and interval
     if (input$takeSample) {
-      hist(rv$sample, freq = FALSE, col = "lightblue", add = T)
+      hist(rv$sample, freq = FALSE, col = alpha("lightblue", 0.5), add = T)
       segments(x0 = rv$lower, y0 = 0, x1 = rv$upper, y1 = 0, 
                col = "green", lwd = 3)
       text(x=rv$lower,y=0,labels="(")
