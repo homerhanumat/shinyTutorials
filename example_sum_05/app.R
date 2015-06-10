@@ -4,6 +4,9 @@ library(scales)
 ## Set up underlying populations:
 source("setup.R")
 
+## Set upper limit on sims
+simLimit <- 10000 #upper limit on number of sims at once
+
 ##########################################################
 ## ui
 ##########################################################
@@ -28,6 +31,10 @@ ui <- fluidPage(
      sliderInput(inputId="confLevel","Confidence Level",value=80,min=50,max=99,step=1)
     ),
     
+    helpText("How many samples would you like to take at one time?  Limit is 10000. With each ",
+             "sample, we'll make a confidence interval for the population mean."),
+    numericInput("sims", "Number of Samples at Once", 1, min=0, max = simLimit, step=1),
+    
   actionButton("takeSample","Sample Now"),
     
   conditionalPanel(
@@ -42,6 +49,14 @@ ui <- fluidPage(
     plotOutput("plotSample"),
     conditionalPanel(
         condition = 'output.beginning == false',
+        HTML("<ul>
+                        <li>The population density curve is in red.</li>
+                        <li>The vertical line marks the population mean.</li>
+                        <li>A histogram of the most recent sample is in light blue.</li>
+                        <li>The most recent sample mean is the big blue dot.</li>
+                        <li>The most recent confidence interval is in green.</li>
+                      </ul>"),
+        br(''),
         tableOutput("summary")
     )
     
@@ -102,34 +117,44 @@ server <- function(input, output) {
   
   observeEvent(input$takeSample, 
                {
-                 # random sample and its mean
-                 n <- input$n
-                 samp <- switch(input$popDist,
-                            normal=rnorm(n,mean=muNorm,sd=sigmaNorm),
-                            skew=rgamma(n,shape=shapeGamma,scale=scaleGamma),
-                            superskew=rpareto(n,alpha=alphaPareto,theta=thetaPareto),
-                            outliers=routlier(n))
-                 xbar <-  mean(samp)
+                 # get the samples, make the intervals
                  
-                 # make bounds for the confidence interval
-                 conf  <- isolate(input$confLevel/100)
-                 t.input <- conf + ((1 - conf)/2)
-                 tMultiplier <- qt(t.input, df = input$n - 1)
-                 se <-  sd(samp)/sqrt(input$n)
-                 margin <- tMultiplier * se
+                 n <- input$n
+                 reps <- min(input$sims, simLimit)
+                 
+                 # grab all the random items you need at once:
+                 itemNumb <- reps*n
+                 sampleItems <- switch(input$popDist,
+                          normal=rnorm(itemNumb,mean=muNorm,sd=sigmaNorm),
+                          skew=rgamma(itemNumb,shape=shapeGamma,scale=scaleGamma),
+                          superskew=rpareto(itemNumb,alpha=alphaPareto,theta=thetaPareto),
+                          outliers=routlier(itemNumb))
+                 
+                 # arrange the random items in a matrix; the rows are your samples
+                 sampleMatrix <- matrix(sampleItems,ncol=n,nrow=reps)
+                 
+                 conf = input$confLevel/100
+                 t.input = conf + ((1 - conf)/2)
+                 tMultiplier = qt(t.input, df = n - 1)
+                 
+                 # from the matrix, quickly compute the items you need
+                 xbar <- rowSums(sampleMatrix)/n
+                 se <- sqrt((rowSums(sampleMatrix^2)-n*xbar^2)/(n^2-n))
+                 margin = tMultiplier * se
                  lower <- xbar - margin
                  upper <- xbar + margin
+                 goodInterval <- ((rvPop$popMean > lower) & (rvPop$popMean < upper))
+                 goodCount <- sum(goodInterval)
                  
-                 # does the interval contain the parameter?
-                 goodInterval <- rvPop$popMean >= lower & rvPop$popMean <= upper
+                 latestSamp <<- sampleMatrix[reps,]
                  
                  # store in rv
-                 rv$sample <- samp
-                 rv$mean <- xbar
-                 rv$lower <- lower
-                 rv$upper <- upper
-                 rv$sims <- rv$sims + 1
-                 rv$good <- rv$good + goodInterval
+                 rv$sample <- sampleMatrix[reps, ]
+                 rv$mean <- xbar[reps]
+                 rv$lower <- lower[reps]
+                 rv$upper <- upper[reps]
+                 rv$sims <- rv$sims + reps
+                 rv$good <- rv$good + goodCount
                  rv$begin <- FALSE
                  })
   
