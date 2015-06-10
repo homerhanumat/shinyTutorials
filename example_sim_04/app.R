@@ -14,7 +14,7 @@ ui <- fluidPage(
   
   sidebarPanel(
     conditionalPanel(
-      condition = "input$resample == 0 || output.beginning == true",
+      condition = "input$crazyTag == 0 || output.beginning == true",
       selectInput(inputId="popDist",label="Population Shape",
                   choices=list("Normal"="normal",
                                "Skewy"="skew",

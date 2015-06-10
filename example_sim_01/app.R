@@ -11,6 +11,7 @@ xSkew <- seq(0,shapeGamma*scaleGamma+7.5*sqrt(shapeGamma)*scaleGamma,
 ySkew <- dgamma(xSkew,shape=shapeGamma,scale=scaleGamma)
 popDen <- list(x=xSkew,y=ySkew)
 popMean <- shapeGamma*scaleGamma
+yMax <- 1.5*max(popDen$y)
 
 ############################################################
 ## ui
@@ -76,17 +77,21 @@ server <- function(input, output) {
     plot(popDen$x,popDen$y,type="l",lwd=3,col="red",
          main="Density Curve of Population",
          xlab="",
-         ylab="density")
+         ylab="density",
+         ylim = c(0,yMax))
     abline(v=popMean,lwd=2)
     
     # sample and interval
     if (input$takeSample) {
       hist(rv$sample, freq = FALSE, col = alpha("lightblue", 0.5), add = T)
-      segments(x0 = rv$lower, y0 = 0, x1 = rv$upper, y1 = 0, 
+
+      # now the interval
+      intLevel <- 0.95*yMax
+      segments(x0 = rv$lower, y0 = intLevel, x1 = rv$upper, y1 = intLevel, 
                col = "green", lwd = 3)
-      text(x=rv$lower,y=0,labels="(")
-      text(x=rv$upper,y=0,labels=")")
-      points(rv$mean, 0, col = "blue", pch = 20,cex=2)
+      text(x=rv$lower,y=intLevel,labels="(")
+      text(x=rv$upper,y=intLevel,labels=")")
+      points(rv$mean, intLevel, col = "blue", pch = 20,cex=2)
       rug(rv$sample)
     }
     
