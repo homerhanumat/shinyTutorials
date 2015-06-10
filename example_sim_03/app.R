@@ -128,6 +128,7 @@ server <- function(input, output) {
       text(x=rv$lower,y=0,labels="(")
       text(x=rv$upper,y=0,labels=")")
       points(rv$mean, 0, col = "blue", pch = 20,cex=2)
+      rug(rv$sample)
     }
     
   })  # end plotSample
