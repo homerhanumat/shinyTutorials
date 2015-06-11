@@ -1,3 +1,5 @@
+## Add ability to keep track of results
+
 library(shiny)
 library(scales)
 

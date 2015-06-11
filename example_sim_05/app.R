@@ -1,3 +1,5 @@
+## Add ability to set the number of simulations to perform
+
 library(shiny)
 library(scales)
 

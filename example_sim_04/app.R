@@ -1,3 +1,5 @@
+## Add ability to choose population, and use conditional panels
+
 library(shiny)
 library(scales)
 

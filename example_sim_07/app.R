@@ -1,3 +1,5 @@
+## Use navbarPage() to add a related app
+
 library(shiny)
 library(scales)
 

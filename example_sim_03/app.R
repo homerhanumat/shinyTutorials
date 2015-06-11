@@ -1,3 +1,5 @@
+## Add ability to start over
+
 library(shiny)
 library(scales)
 
