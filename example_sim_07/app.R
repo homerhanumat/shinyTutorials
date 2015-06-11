@@ -11,11 +11,12 @@ simLimit <- 10000 #upper limit on number of sims at once
 ## ui
 ##########################################################
 
-ui <- fluidPage(
+ui <- navbarPage(
   
-  titlePanel('Exploring Confidence Intervals'),
+  title = 'Exploring Confidence Intervals',
   
-  sidebarPanel(
+  tabPanel(title = "Coverage Properties",
+    sidebarPanel(
     conditionalPanel(
       condition = "input.takeSample == 0 || output.beginning == true",
       selectInput(inputId="popDist",label="Population Shape",
@@ -26,10 +27,13 @@ ui <- fluidPage(
       br(),
       sliderInput(inputId="n","Sample Size n",value=2,min=2,max=50,step=1),
       helpText("How confident do you want to be that the population mean is contained",
-             "within the confidence interval?   Use the slider to select a desired",
-             "percent-confidence level."),
-     sliderInput(inputId="confLevel","Confidence Level",value=80,min=50,max=99,step=1)
+               "within the confidence interval?   Use the slider to select a desired",
+               "percent-confidence level."),
+      sliderInput(inputId="confLevel","Confidence Level",value=80,min=50,max=99,step=1)
+
     ),
+    
+    
     
     helpText("How many samples would you like to take at one time?  Limit is 10000. With each ",
              "sample, we'll make a confidence interval for the population mean."),
@@ -88,6 +92,64 @@ ui <- fluidPage(
     ) # end conditonal panel
     
   ) # end main panel
+  ), # end tabPanel
+  
+  tabPanel(title = "Fifty at a Time",
+           sidebarPanel(
+             conditionalPanel(
+               condition = "input.takeSample2 == 0 || output.beginning2 == true",
+               selectInput(inputId="popDist2",label="Population Shape",
+                           choices=list("Normal"="normal",
+                                        "Skewy"="skew",
+                                        "REALLY Skewed"="superskew",
+                                        "Way-Out Outlier Group"="outliers")),
+               br()
+
+             ),
+             
+             sliderInput(inputId="n2","Sample Size n",value=2,min=2,max=50,step=1),
+             helpText("How confident do you want to be that the population mean is contained",
+                      "within the confidence interval?   Use the slider to select a desired",
+                      "percent-confidence level."),
+             sliderInput(inputId="confLevel2","Confidence Level",value=80,min=50,max=99,step=1),
+             
+             actionButton("takeSample2","Fifty Samples Now"),
+             
+             conditionalPanel(
+               condition = 'output.beginning2 == false',
+               actionButton("reset2","Start Over")
+             )
+             
+           ), # end sidebarPanel2
+           
+           mainPanel(
+             
+             conditionalPanel(
+               condition = "input.takeSample2 == 0 || output.beginning2 == true",
+               plotOutput("initialGraph2"),
+               HTML("<ul>
+                    <li>The population density curve is in red.</li>
+                    <li>The vertical line marks the population mean.</li>
+                    </ul>")
+               ),
+             
+             
+             conditionalPanel(
+                          condition = "output.beginning2 == false",
+                          plotOutput("plotSample2"),
+                          HTML("<ul>
+                        <li>The population density curve is in red.</li>
+                        <li>The vertical line marks the population mean.</li>
+                        <li>Intervals covering the mean are green.</li>
+                        <li>Intervals NOT covering the mean are in burlywood.</li>
+                      </ul>"),
+                          tableOutput("summary2")
+
+
+             ) # end conditonal panel
+             
+          ) # end main panel    
+  ) # end fifty tab panel
   
 )
 
@@ -96,6 +158,13 @@ ui <- fluidPage(
 #################################################################
 
 server <- function(input, output) {
+  
+  ## set see so that users arelikely to get different results
+  set.seed(as.numeric(Sys.time()))
+  
+################################ 
+## for coverage tab
+##############################
   
   rvPop  <- reactiveValues(
     popDen = normalDen,
@@ -278,6 +347,159 @@ server <- function(input, output) {
     } #end check that there are samples
     
   })
+  
+#####################################
+## for fifty tab
+####################################
+  
+  rvPop2  <- reactiveValues(
+    popDen = normalDen,
+    popMean = normalMean,
+    popMax = max(normalDen$x),
+    popMin = min(normalDen$x)
+  )
+  
+  observeEvent(input$popDist2,
+               {
+                 rvPop2$popDen <- switch(input$popDist2,
+                                        normal=normalDen,
+                                        skew=skewDen,
+                                        superskew=superSkewDen,
+                                        outliers=outlierDen)
+                 rvPop2$popMean <- switch(input$popDist2,
+                                         normal=normalMean,
+                                         skew=skewMean,
+                                         superskew=superSkewMean,
+                                         outliers=outlierMean)
+                 rvPop2$popMax <- switch(input$popDist2,
+                                        normal=max(normalDen$x),
+                                        skew=max(skewDen$x),
+                                        superskew=max(superSkewDen$x),
+                                        outliers=max(outlierDen$x))
+                 rvPop2$popMin <- switch(input$popDist2,
+                                        normal=min(normalDen$x),
+                                        skew=min(skewDen$x),
+                                        superskew=min(superSkewDen$x),
+                                        outliers=min(outlierDen$x))
+               }
+  )
+  
+  
+  yMax2 <- reactive({
+    max(rvPop2$popDen$y)*1.5
+  })
+  
+  rv2 <- reactiveValues(lower = NULL,
+                        upper = NULL,
+                        good = NULL,
+                        low = NULL,
+                        high = NULL,
+                        begin = TRUE)
+  
+  observeEvent(input$takeSample2, 
+               {
+                 # get the samples, make the intervals
+                 
+                 n <- input$n2
+                 reps <- 50
+                 
+                 # grab all the random items you need at once:
+                 itemNumb <- reps*n
+                 sampleItems <- switch(input$popDist2,
+                                       normal=rnorm(itemNumb,mean=muNorm,sd=sigmaNorm),
+                                       skew=rgamma(itemNumb,shape=shapeGamma,scale=scaleGamma),
+                                       superskew=rpareto(itemNumb,alpha=alphaPareto,theta=thetaPareto),
+                                       outliers=routlier(itemNumb))
+                 
+                 # arrange the random items in a matrix; the rows are your samples
+                 sampleMatrix <- matrix(sampleItems,ncol=n,nrow=reps)
+                 
+                 conf = input$confLevel2/100
+                 t.input = conf + ((1 - conf)/2)
+                 tMultiplier = qt(t.input, df = n - 1)
+                 
+                 # from the matrix, quickly compute the items you need
+                 xbar <- rowSums(sampleMatrix)/n
+                 se <- sqrt((rowSums(sampleMatrix^2)-n*xbar^2)/(n^2-n))
+                 margin = tMultiplier * se
+                 lower <- xbar - margin
+                 upper <- xbar + margin
+                 highInterval <- (rvPop2$popMean < lower)
+                 lowInterval <- (rvPop2$popMean > upper)
+                 goodInterval <- !(lowInterval | highInterval)
+                 
+                 # store in rv2
+                 rv2$lower <- lower
+                 rv2$upper <- upper
+                 rv2$good <- goodInterval
+                 rv2$low <- lowInterval
+                 rv2$high <- highInterval
+                 rv2$begin <- FALSE
+                 
+                 
+               })
+  
+  observeEvent(input$reset2,
+               {
+                 rv2$lower <- NULL
+                 rv2$upper <- NULL
+                 rv2$good <- NULL
+                 rv2$low <- NULL
+                 rv2$high <- NULL
+                 rv2$begin <- TRUE
+               })
+  
+  output$beginning2 <- reactive({
+    rv2$begin
+  })
+  
+  # needed for the conditional panels to work
+  outputOptions(output, 'beginning2', suspendWhenHidden=FALSE)
+  
+  output$initialGraph2 <- renderPlot({
+    # the underlying population
+    plot(rvPop2$popDen$x,rvPop2$popDen$y,type="l",lwd=3,col="red",
+         main="Density Curve of Population",
+         xlim=c(rvPop2$popMin,rvPop2$popMax),
+         ylim=c(0,yMax2()),
+         xlab="",
+         ylab="density")
+    abline(v=rvPop2$popMean,lwd=2)
+  })
+  
+  output$plotSample2 <- renderPlot({
+    # the underlying population
+    plot(rvPop2$popDen$x,rvPop2$popDen$y,type="l",lwd=3,col="red",
+         main="Density Curve of Population",
+         xlim=c(rvPop2$popMin,rvPop2$popMax),
+         ylim=c(0,yMax2()),
+         xlab="",
+         ylab="density")
+    abline(v=rvPop2$popMean,lwd=2)
+    
+    # intervals
+    if (! rv2$begin) {
+      reps <- length(rv2$lower)
+      for(i in 1:reps) {
+        interval <- c(rv2$lower[i],rv2$upper[i])
+        color <- ifelse(rv2$good[i],"green","red")
+        width <- ifelse(rv2$good[i],1,2)
+        height <- 0.98*yMax2() *i/50
+        lines(interval, c(height,height), col = color, lwd = width)
+      }
+    }
+    
+  })  # end plotSample
+  
+  # summary of intervals so far
+  output$summary2 <- renderTable({
+    df <- data.frame(50,
+                     sum(rv2$good),
+                     sum(rv2$low),
+                     sum(rv2$high))
+    names(df) <- c("Simulations", "Good Intervals", "Low Intervals", "High Intervals")
+    df
+  }, include.rownames = FALSE)
   
 } # end server
 
