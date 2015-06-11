@@ -45,6 +45,9 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
+  ## set see so that users arelikely to get different results
+  set.seed(as.numeric(Sys.time()))
+  
   rv <- reactiveValues(sample = NULL, 
                        mean = NULL, 
                        lower = NULL,

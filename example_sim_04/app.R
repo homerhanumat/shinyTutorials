@@ -55,6 +55,9 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
+  ## set see so that users arelikely to get different results
+  set.seed(as.numeric(Sys.time()))
+  
   rvPop  <- reactiveValues(
     popDen = normalDen,
     popMean = normalMean,
