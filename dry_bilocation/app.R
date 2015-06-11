@@ -6,7 +6,7 @@ library(shiny)
 
 ui <- fluidPage(
   
-  titlePanel('Sorry, No Bilocation!'),
+  titlePanel('DRY Bilocation'),
   
   mainPanel(
     
@@ -15,7 +15,7 @@ ui <- fluidPage(
         tableOutput("crosstab")
         ),
       tabPanel(title = "Panel 2",
-          tableOutput("crosstab")
+          tableOutput("crosstab2")
         )
     )
   )  # end mainPanel
@@ -25,12 +25,20 @@ ui <- fluidPage(
 #################################################################
 ## server
 #################################################################
-
-server <- function(input, output) {
   
-  output$crosstab <- renderTable({
-    xtabs(~ am + cyl, data = mtcars)
-  })
+  server <- function(input, output) {
+    
+    makeTable <- function() {
+      xtabs(~ am + cyl, data = mtcars)
+    }
+    
+    output$crosstab <- renderTable({
+      makeTable()
+    })
+    
+    output$crosstab2 <- renderTable({
+      makeTable()
+    })
   
 } # end server
 
