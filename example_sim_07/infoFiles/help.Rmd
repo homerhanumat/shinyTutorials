@@ -140,3 +140,15 @@ You can head to the t-statistic tab at any time, but it makes the most sense to 
 
 Use this tab to make and graph fifty intervals at once.  It can be interesting to see *how* the interval go wrong, from one population to another.
 
+This tab also helps you explore how the width of t-intervals is affected by three things:
+
+* the sample size $n$;
+* the desired level of confidence;
+* the standard deviation $s$ of the sample.
+
+Fix a population, a sample size, and a desired level of confidence.  Make your fifty intervals.  Note that they are not all the same width.  This is because not all of your samples had the same standard deviaiton.  The more spread out the sample is, the more spread out the confidence interval for $\mu$ will be.  At what sample sizes are the differences in width most notable?
+
+Fix a population and a sample size,but vary the desired level of confidence.  You should note that the larger the desired level of confidence, the wider the intervals are.
+
+Fix a population and a sample a desired level of confidence, but vary the sample size  You should note that the larger the sample size, the narrower the intervals are.
+

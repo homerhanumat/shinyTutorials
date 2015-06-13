@@ -153,11 +153,11 @@ ui <- navbarPage(
   ), # end fifty tab panel
   
   tabPanel(title = "Help",
-            includeHTML("help.html")
+            includeHTML("infoFiles/help.html")
              ),
   
   tabPanel(title = "About",
-           includeHTML("about.html")
+           includeHTML("infoFiles/aboutapp.html")
            )
   
 
