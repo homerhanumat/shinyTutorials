@@ -1,7 +1,7 @@
 ## Initial App
 
 library(shiny)
-library(scales)
+library(scales) # for transparency in density-plot fill
 
 ############################################################
 ## Set up the gamma-distributed population

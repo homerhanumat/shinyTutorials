@@ -1,7 +1,7 @@
 ## Add ability to choose population, and use conditional panels
 
 library(shiny)
-library(scales)
+library(scales) # for transparency in density-plot fill
 
 ## Set up underlying populations:
 source("setup.R")

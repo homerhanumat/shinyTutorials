@@ -1,7 +1,7 @@
 ## Add ability to set the number of simulations to perform
 
 library(shiny)
-library(scales)
+library(scales) # for transparency in density-plot fill
 
 ## Set up underlying populations:
 source("setup.R")
