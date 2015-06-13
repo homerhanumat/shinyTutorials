@@ -73,7 +73,7 @@ ui <- navbarPage(
                  HTML("<ul>
                         <li>The population density curve is in red.</li>
                         <li>The vertical line marks the population mean.</li>
-                        <li>A density curve for the sample is in light blue.</li>
+                        <li>A density curve for the most recent sample is in light blue.</li>
                         <li>The sample mean is the big blue dot.</li>
                         <li>The confidence interval is in green.</li>
                       </ul>"),
@@ -151,14 +151,14 @@ ui <- navbarPage(
              ) # end conditional panel
           ) # end main panel  
   ), # end fifty tab panel
+
   
-  tabPanel(title = "Help",
-            includeHTML("infoFiles/help.html")
-             ),
-  
-  tabPanel(title = "About",
-           includeHTML("infoFiles/aboutapp.html")
-           )
+  navbarMenu(title = "More",
+             tabPanel(title = "Help",
+                      includeHTML("infoFiles/help.html")),
+             tabPanel(title = "About",
+                      includeHTML("infoFiles/aboutapp.html"))
+  )# end navbarMenu
   
 
   )
