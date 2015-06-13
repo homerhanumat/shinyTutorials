@@ -73,7 +73,7 @@ ui <- navbarPage(
                  HTML("<ul>
                         <li>The population density curve is in red.</li>
                         <li>The vertical line marks the population mean.</li>
-                        <li>The histogram of the sample is in light blue.</li>
+                        <li>A density curve for the sample is in light blue.</li>
                         <li>The sample mean is the big blue dot.</li>
                         <li>The confidence interval is in green.</li>
                       </ul>"),
@@ -148,12 +148,20 @@ ui <- navbarPage(
                           tableOutput("summary2")
 
 
-             ) # end conditonal panel
-             
-          ) # end main panel    
-  ) # end fifty tab panel
+             ) # end conditional panel
+          ) # end main panel  
+  ), # end fifty tab panel
   
-)
+  tabPanel(title = "Help",
+            includeHTML("help.html")
+             ),
+  
+  tabPanel(title = "About",
+           includeHTML("about.html")
+           )
+  
+
+  )
 
 #################################################################
 ## server
@@ -291,7 +299,7 @@ server <- function(input, output) {
   output$plotSample <- renderPlot({
     # the underlying population
     plot(rvPop$popDen$x,rvPop$popDen$y,type="l",lwd=3,col="red",
-         main="Density Curve of Population",
+         main="Density Curve of Population, with Random Sample",
          xlim=c(rvPop$popMin,rvPop$popMax),
          ylim=c(0,yMax()),
          xlab="",
@@ -300,7 +308,14 @@ server <- function(input, output) {
     
     # sample and interval
     if (! rv$begin) {
-      hist(rv$sample, freq = FALSE, col = alpha("lightblue",0.5), add = T)
+      
+      # density plot for the sample
+      sampDen <- density(rv$sample, from = 0)
+      xdens <- sampDen$x
+      ydens <- sampDen$y
+      firstx <- xdens[1]
+      lastx <- xdens[length(xdens)]
+      polygon(x = c(firstx,xdens,lastx), y = c(0,ydens,0), col = alpha("lightblue",0.5))
       
       # now the interval
       intLevel <- 0.95*yMax()
@@ -472,7 +487,7 @@ server <- function(input, output) {
   output$plotSample2 <- renderPlot({
     # the underlying population
     plot(rvPop2$popDen$x,rvPop2$popDen$y,type="l",lwd=3,col="red",
-         main="Density Curve of Population",
+         main="Density Curve of Population, with Intervals",
          xlim=c(rvPop2$popMin,rvPop2$popMax),
          ylim=c(0,yMax2()),
          xlab="",

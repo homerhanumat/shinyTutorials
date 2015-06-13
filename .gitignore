@@ -3,3 +3,7 @@
 .RData
 *.Rproj
 shinyapps/
+rsconnect/
+coverage.*
+fifty.*
+navbarMenuIssue/

@@ -54,7 +54,7 @@ ui <- fluidPage(
         HTML("<ul>
                         <li>The population density curve is in red.</li>
                         <li>The vertical line marks the population mean.</li>
-                        <li>A histogram of the most recent sample is in light blue.</li>
+                        <li>A density plot for the most recent sample is in light blue.</li>
                         <li>The most recent sample mean is the big blue dot.</li>
                         <li>The most recent confidence interval is in green.</li>
                       </ul>"),
@@ -193,7 +193,14 @@ server <- function(input, output) {
     
     # sample and interval
     if (! rv$begin) {
-      hist(rv$sample, freq = FALSE, col = alpha("lightblue",0.5), add = T)
+      
+      # density plot for the sample
+      sampDen <- density(rv$sample, from = 0)
+      xdens <- sampDen$x
+      ydens <- sampDen$y
+      firstx <- xdens[1]
+      lastx <- xdens[length(xdens)]
+      polygon(x = c(firstx,xdens,lastx), y = c(0,ydens,0), col = alpha("lightblue",0.5))
       
       # now the interval
       intLevel <- 0.95*yMax()

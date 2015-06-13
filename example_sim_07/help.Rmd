@@ -1,0 +1,8 @@
+---
+title: "Using the Apps"
+author: "Homer White"
+date: "June 12, 2015"
+output: html_document
+---
+
+Here are some things to think about while playing with these apps.

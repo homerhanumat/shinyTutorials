@@ -101,7 +101,14 @@ server <- function(input, output) {
     
     # sample and interval
     if (input$takeSample) {
-      hist(rv$sample, freq = FALSE, col = alpha("lightblue", 0.5), add = T)
+
+      # density plot for the sample
+      sampDen <- density(rv$sample, from = 0)
+      xdens <- sampDen$x
+      ydens <- sampDen$y
+      firstx <- xdens[1]
+      lastx <- xdens[length(xdens)]
+      polygon(x = c(firstx,xdens,lastx), y = c(0,ydens,0), col = alpha("lightblue",0.5))
 
       # now the interval
       intLevel <- 0.95*yMax
