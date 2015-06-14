@@ -18,6 +18,7 @@ ui <- navbarPage(
   title = 'Exploring Confidence Intervals',
   
   tabPanel(title = "Coverage Properties",
+    fluidPage(
     sidebarPanel(
     conditionalPanel(
       condition = "input.takeSample == 0 || output.beginning == true",
@@ -94,9 +95,11 @@ ui <- navbarPage(
     ) # end conditonal panel
     
   ) # end main panel
+    ) # end fluidPage
   ), # end tabPanel
   
   tabPanel(title = "Fifty at a Time",
+           fluidPage(
            sidebarPanel(
              conditionalPanel(
                condition = "input.takeSample2 == 0 || output.beginning2 == true",
@@ -149,7 +152,8 @@ ui <- navbarPage(
 
 
              ) # end conditional panel
-          ) # end main panel  
+          ) # end main panel
+           ) # end fluidPage
   ), # end fifty tab panel
 
   

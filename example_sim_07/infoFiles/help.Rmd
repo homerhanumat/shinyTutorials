@@ -4,8 +4,8 @@ author: "Homer White"
 output: html_document
 ---
 
-```{r include=FALSE}
-library(tigerstats)
+```{r echo=FALSE}
+source("ptGC.R")
 ```
 
 
@@ -15,7 +15,7 @@ Here are some things to think about while playing with these apps.
 
 Say that we have taken a random sample from some population, and we use that sample to make a 95%-confidence for some population parameter in which we are interested.  (For this app we will suppose that we are interested in the mean $\mu$ of the population.)  Maybe the interval turns out to range from 65 to 75.  We are taught to say:
 
->"We are 95%-confident that $\mu$" is somewhere between 65 and 75."
+>"We are 95%-confident that $\mu$ is somewhere between 65 and 75."
 
 That's all very well, but suppose someone asks:  "What's with the 95 percent?  What makes you 95% confident, instead of 90% confident, or something else?"
 
