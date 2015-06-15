@@ -73,7 +73,7 @@ server <- function(input, output) {
                  rv$mean <- xbar
                  rv$lower <- xbar - margin
                  rv$upper <- xbar + margin
-                 })
+               })
   
   
   output$plotSample <- renderPlot({
@@ -88,7 +88,7 @@ server <- function(input, output) {
     
     # sample and interval
     if (input$takeSample) {
-
+      
       # density plot for the sample
       sampDen <- density(rv$sample, from = 0)
       xdens <- sampDen$x
@@ -96,7 +96,7 @@ server <- function(input, output) {
       firstx <- xdens[1]
       lastx <- xdens[length(xdens)]
       polygon(x = c(firstx,xdens,lastx), y = c(0,ydens,0), col = alpha("lightblue",0.5))
-
+      
       # now the interval
       intLevel <- 0.95*yMax
       segments(x0 = rv$lower, y0 = intLevel, x1 = rv$upper, y1 = intLevel, 

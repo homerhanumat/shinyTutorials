@@ -25,14 +25,14 @@ ui <- fluidPage(
   
   sidebarPanel(
     
-      sliderInput(inputId="n","Sample Size n",value=2,min=2,max=50,step=1),
-      helpText("How confident do you want to be that the population mean is contained",
+    sliderInput(inputId="n","Sample Size n",value=2,min=2,max=50,step=1),
+    helpText("How confident do you want to be that the population mean is contained",
              "within the confidence interval?   Use the slider to select a desired",
              "percent-confidence level."),
     
-     sliderInput(inputId="confLevel","Confidence Level",value=80,min=50,max=99,step=1),
+    sliderInput(inputId="confLevel","Confidence Level",value=80,min=50,max=99,step=1),
     
-     actionButton("takeSample","Sample Now")
+    actionButton("takeSample","Sample Now")
     
   ), # end sidebarPanel
   
@@ -86,7 +86,7 @@ server <- function(input, output) {
                  rv$upper <- upper
                  rv$sims <- rv$sims + 1
                  rv$good <- rv$good + goodInterval
-                 })
+               })
   
   
   output$plotSample <- renderPlot({
@@ -101,7 +101,7 @@ server <- function(input, output) {
     
     # sample and interval
     if (input$takeSample) {
-
+      
       # density plot for the sample
       sampDen <- density(rv$sample, from = 0)
       xdens <- sampDen$x
@@ -109,7 +109,7 @@ server <- function(input, output) {
       firstx <- xdens[1]
       lastx <- xdens[length(xdens)]
       polygon(x = c(firstx,xdens,lastx), y = c(0,ydens,0), col = alpha("lightblue",0.5))
-
+      
       # now the interval
       intLevel <- 0.95*yMax
       segments(x0 = rv$lower, y0 = intLevel, x1 = rv$upper, y1 = intLevel, 
@@ -124,9 +124,9 @@ server <- function(input, output) {
   
   # summary of intervals so far
   output$summary <- renderTable({
-     df <- data.frame(rv$sims,
-                      rv$good,
-                      ifelse(rv$sims >0, round(rv$good/rv$sims*100,3), NA))
+    df <- data.frame(rv$sims,
+                     rv$good,
+                     ifelse(rv$sims >0, round(rv$good/rv$sims*100,3), NA))
     names(df) <- c("Simulations", "Good Intervals", "Percentage Good")
     df
   }, include.rownames = FALSE)
