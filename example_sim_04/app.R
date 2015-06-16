@@ -59,61 +59,61 @@ server <- function(input, output) {
   
   ## set see so that users arelikely to get different results
   set.seed(as.numeric(Sys.time()))
-  
-  rvPop  <- reactiveValues(
+
+  ## make object to track the state of the app:  
+  rv <- reactiveValues(
     popDen = normalDen,
     popMean = normalMean,
     popMax = max(normalDen$x),
-    popMin = min(normalDen$x)
-  )
+    popMin = min(normalDen$x),
+    yMax = 1.5*max(normalDen$y),
+    sample = NULL, 
+    mean = NULL, 
+    lower = NULL,
+    upper = NULL,
+    sims = 0,
+    good = 0,
+    begin = TRUE)
   
   observeEvent(input$popDist,
                {
-    rvPop$popDen <- switch(input$popDist,
-           normal=normalDen,
-           skew=skewDen,
-           superskew=superSkewDen,
-           outliers=outlierDen)
-    rvPop$popMean <- switch(input$popDist,
-           normal=normalMean,
-           skew=skewMean,
-           superskew=superSkewMean,
-           outliers=outlierMean)
-    rvPop$popMax <- switch(input$popDist,
-           normal=max(normalDen$x),
-           skew=max(skewDen$x),
-           superskew=max(superSkewDen$x),
-           outliers=max(outlierDen$x))
-    rvPop$popMin <- switch(input$popDist,
-           normal=min(normalDen$x),
-           skew=min(skewDen$x),
-           superskew=min(superSkewDen$x),
-           outliers=min(outlierDen$x))
+                 rv$popDen <- switch(input$popDist,
+                                     normal=normalDen,
+                                     skew=skewDen,
+                                     superskew=superSkewDen,
+                                     outliers=outlierDen)
+                 rv$popMean <- switch(input$popDist,
+                                      normal=normalMean,
+                                      skew=skewMean,
+                                      superskew=superSkewMean,
+                                      outliers=outlierMean)
+                 rv$popMax <- switch(input$popDist,
+                                     normal=max(normalDen$x),
+                                     skew=max(skewDen$x),
+                                     superskew=max(superSkewDen$x),
+                                     outliers=max(outlierDen$x))
+                 rv$popMin <- switch(input$popDist,
+                                     normal=min(normalDen$x),
+                                     skew=min(skewDen$x),
+                                     superskew=min(superSkewDen$x),
+                                     outliers=min(outlierDen$x))
+                 rv$yMax <- switch(input$popDist,
+                                   normal=1.5*max(normalDen$y),
+                                   skew=1.5*max(skewDen$y),
+                                   superskew=1.5*max(superSkewDen$y),
+                                   outliers=1.5*max(outlierDen$y))
                }
   )
-  
-  
-  yMax <- reactive({
-    max(rvPop$popDen$y)*1.5
-  })
-  
-  rv <- reactiveValues(sample = NULL, 
-                       mean = NULL, 
-                       lower = NULL,
-                       upper = NULL,
-                       sims = 0,
-                       good = 0,
-                       begin = TRUE)
   
   observeEvent(input$takeSample, 
                {
                  # random sample and its mean
                  n <- input$n
                  samp <- switch(input$popDist,
-                            normal=rnorm(n,mean=muNorm,sd=sigmaNorm),
-                            skew=rgamma(n,shape=shapeGamma,scale=scaleGamma),
-                            superskew=rpareto(n,alpha=alphaPareto,theta=thetaPareto),
-                            outliers=routlier(n))
+                                normal=rnorm(n,mean=muNorm,sd=sigmaNorm),
+                                skew=rgamma(n,shape=shapeGamma,scale=scaleGamma),
+                                superskew=rpareto(n,alpha=alphaPareto,theta=thetaPareto),
+                                outliers=routlier(n))
                  xbar <-  mean(samp)
                  
                  # make bounds for the confidence interval
@@ -126,7 +126,7 @@ server <- function(input, output) {
                  upper <- xbar + margin
                  
                  # does the interval contain the parameter?
-                 goodInterval <- rvPop$popMean >= lower & rvPop$popMean <= upper
+                 goodInterval <- rv$popMean >= lower & rv$popMean <= upper
                  
                  # store in rv
                  rv$sample <- samp
@@ -136,7 +136,7 @@ server <- function(input, output) {
                  rv$sims <- rv$sims + 1
                  rv$good <- rv$good + goodInterval
                  rv$begin <- FALSE
-                 })
+               })
   
   observeEvent(input$reset,
                {
@@ -147,6 +147,7 @@ server <- function(input, output) {
                  rv$sims <- 0
                  rv$good <- 0
                  rv$begin <- TRUE
+                 rv$tstats <- numeric()
                })
   
   output$beginning <- reactive({
@@ -156,19 +157,30 @@ server <- function(input, output) {
   # needed for the conditional panels to work
   outputOptions(output, 'beginning', suspendWhenHidden=FALSE)
   
-  output$plotSample <- renderPlot({
+  output$initialGraph <- renderPlot({
     # the underlying population
-    plot(rvPop$popDen$x,rvPop$popDen$y,type="l",lwd=3,col="red",
+    plot(rv$popDen$x,rv$popDen$y,type="l",lwd=3,col="red",
          main="Density Curve of Population",
-         xlim=c(rvPop$popMin,rvPop$popMax),
-         ylim=c(0,yMax()),
+         xlim=c(rv$popMin,rv$popMax),
+         ylim=c(0,rv$yMax),
          xlab="",
          ylab="density")
-    abline(v=rvPop$popMean,lwd=2)
+    abline(v=rv$popMean,lwd=2)
+  })
+  
+  output$plotSample <- renderPlot({
+    # the underlying population
+    plot(rv$popDen$x,rv$popDen$y,type="l",lwd=3,col="red",
+         main="Density Curve of Population, with Random Sample",
+         xlim=c(rv$popMin,rv$popMax),
+         ylim=c(0,rv$yMax),
+         xlab="",
+         ylab="density")
+    abline(v=rv$popMean,lwd=2)
     
     # sample and interval
     if (! rv$begin) {
-
+      
       # density plot for the sample
       sampDen <- density(rv$sample, from = 0)
       xdens <- sampDen$x
@@ -178,7 +190,7 @@ server <- function(input, output) {
       polygon(x = c(firstx,xdens,lastx), y = c(0,ydens,0), col = alpha("lightblue",0.5))
       
       # now the interval
-      intLevel <- 0.95*yMax()
+      intLevel <- 0.95*rv$yMax
       segments(x0 = rv$lower, y0 = intLevel, x1 = rv$upper, y1 = intLevel, 
                col = "green", lwd = 3)
       text(x=rv$lower,y=intLevel,labels="(")
@@ -191,9 +203,9 @@ server <- function(input, output) {
   
   # summary of intervals so far
   output$summary <- renderTable({
-     df <- data.frame(rv$sims,
-                      rv$good,
-                      ifelse(rv$sims >0, round(rv$good/rv$sims*100,3), NA))
+    df <- data.frame(rv$sims,
+                     rv$good,
+                     ifelse(rv$sims >0, round(rv$good/rv$sims*100,3), NA))
     names(df) <- c("Simulations", "Good Intervals", "Percentage Good")
     df
   }, include.rownames = FALSE)

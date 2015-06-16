@@ -63,6 +63,7 @@ server <- function(input, output) {
   ## set see so that users arelikely to get different results
   set.seed(as.numeric(Sys.time()))
   
+  ## add object to track the state of the app:
   rv <- reactiveValues(sample = NULL, 
                        mean = NULL, 
                        lower = NULL,
