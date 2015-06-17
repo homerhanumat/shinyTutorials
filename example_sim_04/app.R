@@ -11,9 +11,7 @@ source("setup.R")
 ##########################################################
 
 ui <- fluidPage(
-  
   titlePanel('What Does "Confidence Level" Mean?'),
-  
   sidebarPanel(
     conditionalPanel(
       condition = "input.takeSample == 0 || output.beginning == true",
@@ -28,28 +26,21 @@ ui <- fluidPage(
              "within the confidence interval?   Use the slider to select a desired",
              "percent-confidence level."),
      sliderInput(inputId="confLevel","Confidence Level",value=80,min=50,max=99,step=1)
-    ),
-    
-  actionButton("takeSample","Sample Now"),
-    
-  conditionalPanel(
+     ),
+    actionButton("takeSample","Sample Now"),
+    conditionalPanel(
       condition = 'output.beginning == false',
       actionButton("reset","Start Over")
-  )
-    
-  ), # end sidebarPanel
-  
+      )
+    ), # end sidebarPanel
   mainPanel(
-    
     plotOutput("plotSample"),
     conditionalPanel(
         condition = 'output.beginning == false',
         tableOutput("summary")
-    )
-    
-  )  # end mainPanel
-  
-)
+        )
+    ) # end MainPanel
+  )
 
 #################################################################
 ## server
@@ -102,10 +93,10 @@ server <- function(input, output) {
                                    skew=1.5*max(skewDen$y),
                                    superskew=1.5*max(superSkewDen$y),
                                    outliers=1.5*max(outlierDen$y))
-               }
-  )
+                 }
+               )
   
-  observeEvent(input$takeSample, 
+  observeEvent(input$takeSample,
                {
                  # random sample and its mean
                  n <- input$n
@@ -115,7 +106,6 @@ server <- function(input, output) {
                                 superskew=rpareto(n,alpha=alphaPareto,theta=thetaPareto),
                                 outliers=routlier(n))
                  xbar <-  mean(samp)
-                 
                  # make bounds for the confidence interval
                  conf  <- isolate(input$confLevel/100)
                  t.input <- conf + ((1 - conf)/2)
@@ -124,10 +114,8 @@ server <- function(input, output) {
                  margin <- tMultiplier * se
                  lower <- xbar - margin
                  upper <- xbar + margin
-                 
                  # does the interval contain the parameter?
                  goodInterval <- rv$popMean >= lower & rv$popMean <= upper
-                 
                  # store in rv
                  rv$sample <- samp
                  rv$mean <- xbar
@@ -136,7 +124,8 @@ server <- function(input, output) {
                  rv$sims <- rv$sims + 1
                  rv$good <- rv$good + goodInterval
                  rv$begin <- FALSE
-               })
+                 }
+               )
   
   observeEvent(input$reset,
                {
@@ -148,7 +137,8 @@ server <- function(input, output) {
                  rv$good <- 0
                  rv$begin <- TRUE
                  rv$tstats <- numeric()
-               })
+                 }
+               )
   
   output$beginning <- reactive({
     rv$begin
@@ -177,10 +167,8 @@ server <- function(input, output) {
          xlab="",
          ylab="density")
     abline(v=rv$popMean,lwd=2)
-    
     # sample and interval
     if (! rv$begin) {
-      
       # density plot for the sample
       sampDen <- density(rv$sample, from = 0)
       xdens <- sampDen$x
@@ -197,9 +185,8 @@ server <- function(input, output) {
       text(x=rv$upper,y=intLevel,labels=")")
       points(rv$mean, intLevel, col = "blue", pch = 20,cex=2)
       rug(rv$sample)
-    }
-    
-  })  # end plotSample
+      }
+    })  # end plotSample
   
   # summary of intervals so far
   output$summary <- renderTable({
@@ -208,9 +195,8 @@ server <- function(input, output) {
                      ifelse(rv$sims >0, round(rv$good/rv$sims*100,3), NA))
     names(df) <- c("Simulations", "Good Intervals", "Percentage Good")
     df
-  }, include.rownames = FALSE)
-  
-} # end server
+    }, include.rownames = FALSE)
+  } # end server
 
 #######################################################
 ## knit the app

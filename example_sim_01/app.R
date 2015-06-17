@@ -20,9 +20,7 @@ yMax <- 1.5*max(popDen$y)
 ############################################################
 
 ui <- fluidPage(
-  
   titlePanel('What Does "Confidence Level"Mean?'),
-  
   sidebarPanel(
     sliderInput(inputId="n","Sample Size n",value=2,min=2,max=50,step=1),
     helpText("How confident do you want to be that the population mean is contained",
@@ -31,15 +29,11 @@ ui <- fluidPage(
     
     sliderInput(inputId="confLevel","Confidence Level",value=80,min=50,max=99,step=1),
     actionButton("takeSample","Sample Now")
-  ), # end sidebarPanel
-  
+    ), # end sidebarPanel
   mainPanel(
-    
     plotOutput("plotSample")
-    
-  )  # end mainPanel
-  
-)
+    )  # end mainPanel
+  )
 
 #################################################################
 ## server
@@ -60,24 +54,22 @@ server <- function(input, output) {
                  # random sample and its mean
                  samp <- rgamma(input$n,shape=shapeGamma,scale=scaleGamma)
                  xbar <-  mean(samp)
-                 
                  # make bounds for the confidence interval
                  conf = isolate(input$confLevel/100)
                  t.input = conf + ((1 - conf)/2)
                  tMultiplier = qt(t.input, df = input$n - 1)
                  se = sd(samp)/sqrt(input$n)
                  margin = tMultiplier * se
-                 
                  # store in rv
                  rv$sample <- rgamma(input$n,shape=shapeGamma,scale=scaleGamma)
                  rv$mean <- xbar
                  rv$lower <- xbar - margin
                  rv$upper <- xbar + margin
-               })
+                 }
+               )
   
   
   output$plotSample <- renderPlot({
-    
     # the underlying population
     plot(popDen$x,popDen$y,type="l",lwd=3,col="red",
          main="Density Curve of Population",
@@ -85,10 +77,8 @@ server <- function(input, output) {
          ylab="density",
          ylim = c(0,yMax))
     abline(v=popMean,lwd=2)
-    
     # sample and interval
     if (input$takeSample) {
-      
       # density plot for the sample
       sampDen <- density(rv$sample, from = 0)
       xdens <- sampDen$x
@@ -96,7 +86,6 @@ server <- function(input, output) {
       firstx <- xdens[1]
       lastx <- xdens[length(xdens)]
       polygon(x = c(firstx,xdens,lastx), y = c(0,ydens,0), col = alpha("lightblue",0.5))
-      
       # now the interval
       intLevel <- 0.95*yMax
       segments(x0 = rv$lower, y0 = intLevel, x1 = rv$upper, y1 = intLevel, 
@@ -105,11 +94,9 @@ server <- function(input, output) {
       text(x=rv$upper,y=intLevel,labels=")")
       points(rv$mean, intLevel, col = "blue", pch = 20,cex=2)
       rug(rv$sample)
-    }
-    
-  })  # end plotSample
-  
-} # end server
+      }
+    })  # end plotSample
+  } # end server
 
 #######################################################
 ## knit the app
