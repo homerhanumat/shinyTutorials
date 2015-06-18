@@ -1,0 +1,92 @@
+---
+title: "Building a Instructional Simluation App in Shiny"
+author: "Homer White"
+date: "June 17, 2015"
+output: html_document
+runtime: shiny
+---
+
+
+## Version 1
+
+
+Here is the first version:
+
+```{r, echo=FALSE}
+shinyAppDir(
+  "example_sim_01/",
+  options=list(
+    width="100%", height=550
+  )
+)
+```
+
+## Version 2
+
+Here is the second verison:
+
+```{r, echo=FALSE}
+shinyAppDir(
+  "example_sim_02/",
+  options=list(
+    width="100%", height=550
+  )
+)
+```
+
+
+## Version 3
+
+Here is the third version:
+
+```{r, echo=FALSE}
+shinyAppDir(
+  "example_sim_03/",
+  options=list(
+    width="100%", height=550
+  )
+)
+```
+
+## Version 4
+
+Here is the fourth version:
+
+```{r echo = FALSE}
+shinyAppDir(
+  "example_sim_04/",
+  options=list(
+    width="100%", height=650
+  )
+)
+```
+
+## Version 5
+
+```{r echo = FALSE}
+shinyAppDir(
+  "example_sim_05/",
+  options=list(
+    width="100%", height=800
+  )
+)
+```
+
+## Version 6
+
+```{r echo = FALSE}
+shinyAppDir(
+  "example_sim_06/",
+  options=list(
+    width="100%", height=800
+  )
+)
+```
+
+
+## Version 7
+
+You can look at this one <a href = "http://homer.shinyapps.io/example_sim_07" target = "_blank">here</a>.
+
+Hope you enjoy!
+
