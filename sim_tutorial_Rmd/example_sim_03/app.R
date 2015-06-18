@@ -20,7 +20,7 @@ yMax <- 1.5*max(popDen$y)
 ############################################################
 
 ui <- fluidPage(
-  titlePanel('What Does "Confidence Level"Mean?'),
+  titlePanel('What Does "Confidence Level "Mean?'),
   sidebarPanel(
     conditionalPanel(
       condition = "input$crazyTag == 0 || output.beginning == true",

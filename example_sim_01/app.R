@@ -20,7 +20,7 @@ yMax <- 1.5*max(popDen$y)
 ############################################################
 
 ui <- fluidPage(
-  titlePanel('What Does "Confidence Level"Mean?'),
+  titlePanel('What Does "Confidence Level" Mean?'),
   sidebarPanel(
     sliderInput(inputId="n","Sample Size n",value=2,min=2,max=50,step=1),
     helpText("How confident do you want to be that the population mean is contained",
@@ -41,7 +41,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
-  ## set see so that users arelikely to get different results
+  ## set seed so that users are likely to get different results
   set.seed(as.numeric(Sys.time()))
   
   rv <- reactiveValues(sample = NULL, 
