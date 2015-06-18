@@ -49,8 +49,9 @@ navbarPage(
              conditionalPanel(
                condition = "output.beginning == false",
                tabsetPanel(
+                 id = "coverageTabsetPanel",
                  tabPanel(
-                   "Latest Interval",
+                   title = "Latest Interval",
                    plotOutput("plotSample"),
                    HTML("<p> </p>"),
                    HTML("<ul>
@@ -64,7 +65,7 @@ navbarPage(
                    tableOutput("summary")
                    ),
                  tabPanel(
-                   "t-statistic",
+                   title = "t-statistic",
                    plotOutput("tstatistic"),
                    HTML("<p>The plots above compare the actual distribution of the t-statistic to the t-curve with n-1 degrees of freedom.</p>
                         <p></p>

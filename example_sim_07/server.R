@@ -12,7 +12,7 @@ simLimit <- 10000 #upper limit on number of sims at once
 ## the server
 #########################################
 
-function(input, output) {
+function(input, output, session) {
   ## set see so that users arelikely to get different results
   set.seed(as.numeric(Sys.time()))
   
@@ -35,6 +35,7 @@ function(input, output) {
     begin = TRUE,
     tstats = numeric())
   
+  # respond to request to change population
   observeEvent(
     input$popDist,
     {
@@ -62,14 +63,20 @@ function(input, output) {
                       normal=1.5*max(normalDen$y),
                       skew=1.5*max(skewDen$y),
                       superskew=1.5*max(superSkewDen$y),
-                      outliers=1.5*max(outlierDen$y)
-    )
+                      outliers=1.5*max(outlierDen$y))
     }
   )
+  
   # respond to request for sample(s)
   observeEvent(
     input$takeSample, 
     {
+    # if user is at the beginning or has started over, and one sample at a time is
+    # requested, then we will assume that the user would prefer to stat on the "Latest Interval"
+    # tabPanel, rather than the "t-statistic" tabPanel.  Assure this:
+    if (rv$begin && input$sims == 1) {
+      updateTabsetPanel(session, "coverageTabsetPanel", selected = "Latest Interval")
+      }
     # get the samples, make the intervals
     n <- input$n
     reps <- min(input$sims, simLimit)
@@ -106,6 +113,7 @@ function(input, output) {
     rv$tstats <- c(rv$tstats, (xbar-rv$popMean)/se)
     }
     )
+  
   # respond to request to start over
   observeEvent(input$reset,
                {
@@ -118,12 +126,15 @@ function(input, output) {
                  rv$begin <- TRUE
                  rv$tstats <- numeric()
                })
+  
   # need output to help with conditional panels
   output$beginning <- reactive({
     rv$begin
   })
+  
   # needed for the conditional panels to work
   outputOptions(output, 'beginning', suspendWhenHidden=FALSE)
+  
   # now for output that the user will see
   output$initialGraph <- renderPlot({
     # the underlying population
