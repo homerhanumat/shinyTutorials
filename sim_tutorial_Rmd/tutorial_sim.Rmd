@@ -8,7 +8,9 @@ runtime: shiny
 
 ## Introdution and Prerequisites
 
-Shiny makes it easy for R users to develop responsive, R-powered web applications.  As you probably know, either from your own intial rxplorations with Shiny or from the [Shiny Tutorial](http://shiny.rstudio.com/tutorial/), creating simple apps is no problem, and probably you have some ideas for 
+Shiny makes it easy for R users to develop responsive, R-powered web applications.  As you probably know, either from your own intial rxplorations with Shiny or from the [Shiny Tutorial](http://shiny.rstudio.com/tutorial/), creating simple apps is no problem, and probably you have some ideas for teaching apps tha toculd be written using just the tools developed in the Tutorial.
+
+But some teaching apps appear quit ecomplex.  Consider, for example, [this app](http://homer.shinyapps.io/SlowGoodness) that aims to introduce the student to the $\chi^2$ Test for Goodness of Fit.  The app takes the user through a simulation process, keeping track of the results of simulations as they accumulate, permittnig the viewer to consider the results from several points of view, and allowing the viewer to start over, perhaps with new data.
 
 This tutorial assumes that you have:
 
