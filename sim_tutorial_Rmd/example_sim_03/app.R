@@ -23,7 +23,7 @@ ui <- fluidPage(
   titlePanel('What Does "Confidence Level "Mean?'),
   sidebarPanel(
     conditionalPanel(
-      condition = "input$crazyTag == 0 || output.beginning == true",
+      condition = "input$takeSample == 0 || output.beginning == true",
       sliderInput(inputId="n","Sample Size n",value=2,min=2,max=50,step=1),
       helpText("How confident do you want to be that the population mean is contained",
              "within the confidence interval?   Use the slider to select a desired",

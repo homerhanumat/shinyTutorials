@@ -111,20 +111,24 @@ ui <- fluidPage(
       )
     ), # end sidebarPanel
   mainPanel(
-    plotOutput("plotSample"),
     conditionalPanel(
-        condition = 'output.beginning == false',
-        HTML("<ul>
+      condition = "output.beginning == true",
+      plotOutput("initialGraph")
+    ),
+    conditionalPanel(
+      condition = 'output.beginning == false',
+      plotOutput("plotSample"),
+      HTML("<ul>
                 <li>The population density curve is in red.</li>
                 <li>The vertical line marks the population mean.</li>
                 <li>A density plot for the most recent sample is in light blue.</li>
                 <li>The most recent sample mean is the big blue dot.</li>
                 <li>The most recent confidence interval is in green.</li>
               </ul>"),
-        br(''),
-        tableOutput("summary")
-        )
-    )  # end mainPanel
+      br(''),
+      tableOutput("summary")
+    )
+  ) # end MainPanel
   )
 
 #################################################################

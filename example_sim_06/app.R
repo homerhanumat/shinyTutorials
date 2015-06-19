@@ -51,7 +51,7 @@ ui <- fluidPage(
     conditionalPanel(
       condition = "output.beginning == false",
       tabsetPanel(
-        tabPanel("Latest Interval",
+        tabPanel(title = "Latest Interval",
                  plotOutput("plotSample"),
                  HTML("<p> </p>"),
                  HTML("<ul>
@@ -64,7 +64,7 @@ ui <- fluidPage(
                 br(''),
                 tableOutput("summary")
                 ),
-        tabPanel("t-statistic",
+        tabPanel(title = "t-statistic",
                  plotOutput("tstatistic"),
                  HTML(
                    "<p>The plots above compare the actual distribution of the t-statistic to the t-curve with n-1 degrees of freedom.</p>

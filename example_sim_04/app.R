@@ -1,4 +1,4 @@
-## Add ability to choose population, and use conditional panels
+## Add ability to choose population
 
 library(shiny)
 library(scales) # for transparency in density-plot fill
@@ -34,10 +34,14 @@ ui <- fluidPage(
       )
     ), # end sidebarPanel
   mainPanel(
-    plotOutput("plotSample"),
     conditionalPanel(
-        condition = 'output.beginning == false',
-        tableOutput("summary")
+      condition = "output.beginning == true",
+      plotOutput("initialGraph")
+      ),
+    conditionalPanel(
+      condition = 'output.beginning == false',
+      plotOutput("plotSample"),
+      tableOutput("summary")
         )
     ) # end MainPanel
   )

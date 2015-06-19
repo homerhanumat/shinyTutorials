@@ -105,12 +105,16 @@ ui <- fluidPage(
       )
     ), # end sidebarPanel
   mainPanel(
-    plotOutput("plotSample"),
     conditionalPanel(
-        condition = 'output.beginning == false',
-        tableOutput("summary")
-        )
-    ) # end MainPanel
+      condition = "output.beginning == true",
+      plotOutput("initialGraph")
+    ),
+    conditionalPanel(
+      condition = 'output.beginning == false',
+      plotOutput("plotSample"),
+      tableOutput("summary")
+    )
+  ) # end MainPanel
   )
 
 #################################################################
