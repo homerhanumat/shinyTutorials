@@ -12,11 +12,9 @@ runtime: shiny
 
 Shiny makes it easy for R users to develop responsive, R-powered web applications.  As you probably know, either from your own initial forays into Shiny or from the <a href = "http://shiny.rstudio.com/tutorial/" target = "_blank">Shiny Tutorial</a>, creating simple apps is no problem, and probably you have some ideas for teaching apps that could be written using just the tools developed in the Tutorial.
 
-But some teaching apps appear quite complex.  Consider, for example, <a href = "http://homer.shinyapps.io/SlowGoodness" target = "_blank">this app</a> which aims to introduce the student to the $\chi^2$ Test for Goodness of Fit.  The app takes the user through a simulation process, keeping track of the results of simulations as they accumulate, permitting the viewer to consider the results from several points of view, and allowing the viewer to start over, perhaps with new data.
+But some teaching apps appear to be quite complex.  Consider, for example, <a href = "http://homer.shinyapps.io/SlowGoodness" target = "_blank">this app</a> which aims to introduce the student to the $\chi^2$ Test for Goodness of Fit.  The app takes the user through a simulation process, keeping track of the results of simulations as they accumulate, permitting the viewer to consider the results from several points of view, and allowing the viewer to start over, perhaps with new data.
 
-The aim of this tutorial is to take you step-by-step through the construction of a reasonably full-featured app that lets students explore, through simulation, the coverage properties of the classical t-intervals for a population mean.  After completing the tutorial you will be able to write your own simulation apps, hopefully being spared some of the struggle that I went through when I first learned Shiny in the Spring of 2014.
-
-Please feel free to copy and re-use the code in this repository:  It's under a General Public License.  You can also offer feedback on Git Hub by opening an Issue.
+The aim of this tutorial is to take you step-by-step through the construction of a reasonably full-featured simulation app that lets students explore, through simulation, the coverage properties of the classical t-intervals for a population mean.  After completing the tutorial you will be able to write your own simulation apps---hopefully having been spared some of the struggle that I went through when I first learned Shiny in the Spring of 2014.
 
 ### Prerequisites
 
@@ -31,13 +29,13 @@ All of the materials for this tutorial are available in my GitHub repository:
 
 ><a href = "https://github.com/homerhanumat/shinyTutorials" target = "_blank">https://github.com/homerhanumat/shinyTutorials</a>
 
-If you use Git, you could clone the repository into a new R Project.  Otherwise, simply visit the repository and click the `Download Zip` button.
+The code in the above repository is licensed as fee software:  please feel free to copy and modify it for your own apps.  You can also offer feedback on GitHub by opening an Issue.  If you use Git, you could clone the repository into a new R Project.  Otherwise simply visit the repository and click the `Download Zip` button.
 
 ## Version 1:  The Bare-Bones App
 
 ### The App
 
-We'll start very simple confidence-interval app (below).  Play with it until you realize what it does.
+We'll start very simple confidence-interval app (below).  Play with it until you understand what it does.
 
 ```{r, echo=FALSE}
 shinyAppDir(
@@ -50,7 +48,7 @@ shinyAppDir(
 
 ### The Code
 
-The complete code may be viewed  <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_01/app.R" target = "_blank">here</a>.  Since it's not a great deal of code, we also show it below:
+The complete code may be viewed  <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_01/app.R" target = "_blank">here</a>, but since it's not a great deal of code (yet), we also show it below:
 
 ```{r eval = FALSE}
 ## Initial App
@@ -81,7 +79,6 @@ ui <- fluidPage(
     helpText("How confident do you want to be that the population mean is contained",
              "within the confidence interval?   Use the slider to select a desired",
              "percent-confidence level."),
-    
     sliderInput(inputId="confLevel","Confidence Level",value=80,min=50,max=99,step=1),
     actionButton("takeSample","Sample Now")
     ), # end sidebarPanel
@@ -162,7 +159,7 @@ shinyApp(ui = ui, server = server)
 
 ### Discussion
 
-The code determining the population is placed outside of the `ui()` and `server()` functions.  This means that it will be one only once, at the beginning of the R session, even if multiple users are viewing the app.  Since in this bare-bones version our users can't pick another population, it's most efficient to run the code once for everyone.
+The code determining the population is placed outside of the `ui()` and `server()` functions.  This means that it will be run only once, at the beginning of the R session, even if multiple users are viewing the app.  Since in this bare-bones version our users can't pick another population, it's most efficient to run the code once for everyone.
 
 The code to set the random seed:
 
@@ -170,17 +167,19 @@ The code to set the random seed:
   set.seed(as.numeric(Sys.time()))
 ```
 
-appears inside the `ui()` function.  Hence it is one once for each user.  Since users are likely to app at different times, they are all likely to experience different results.  Usually this is what we desire when class members use an app together.
+appears inside the `ui()` function.  Hence it is run once for each user.  Since users are likely to app at different times, they are all likely to experience different results.  Usually this is what we desire when class members use an app together.
 
-When the app begins, the `rv` list is created with the call to `reactiveValues()` and initially it contains some Null values.  The user may or may not select a new sample size and confidence level, but since the `rv` values have been set the `renderPlot()` function, having a body that contains these values, is obliged to spring into action and to make `output$plotSample`.  However, before the user requests a sample, the value of the action button, `input$takeSample` is 0.  Hence the `if` clause in `renderPlot()` will evaluate to `FALSE` and the only thing produced is a density plot of the population.
+When the app begins, the `rv` list is created with the call to `reactiveValues()` and all of whihc are iniatially set to `NULL`..  The user may or may not select a new sample size and confidence level, but since the `rv` values have been set the `renderPlot()` function, having a body that contains these values, is obliged to spring into action and to make `output$plotSample`.  However, before the user requests a sample, the value of the action button, `input$takeSample` is 0.  Hence the `if` clause in `renderPlot()` will evaluate to `FALSE` and the only thing produced is a density plot of the population.
 
-If this app were a rock band, then `reactiveValues()` and `observeEvent()` would surely be the drummer and bass guitar player.  Working together, this pair makes the underlying rhythm and helps the other players stay on track.  As soon as the user requests a sample, `observeEvent()` takes note of the fact.  This function:
+If this app were a rock band, then `reactiveValues()` and `observeEvent()` would surely be the drummer and bass guitar player.  Working together, this pair makes the underlying rhythm and helps the other players stay on track.
+
+Their mutual synergy is evident as soon as the user requests a sample. Requesting a sample entails pressing the action button, whihc changes the value of `input$takeSample`.  `observeEvent()` takes note of this occurence.  This function:
 
 * runs the code to produce a random sample of the desired size,
 * computes a confidence interval of the desired level of confidence, and
 * updates `rv` with the relevant information.
 
-Since the elements of `rv` are all reactive, any change in any one of them suffices to invalidate `output$plotSample`.  Hence R runs `renderPlot()` again.  As soon as the user requests a sample, `input$takeSample`, which began at 0, increases by one unit.  Hence in the `if` statement the condition `input$takeSample` will evaluate to `TRUE`---any nonzero integer evaluates to `TRUE`---and`renderPlot()` will therefore add the density plot of the sample and the confidence interval to the density plot of the population.
+Since the elements of `rv` are all reactive, any change in any one of them suffices to invalidate `output$plotSample`.  Hence R runs `renderPlot()` again.  Whenever the user requests a sample, `input$takeSample`, which began at 0, increases by one unit.  Hence in the `if` statement the condition `input$takeSample` will evaluate to `TRUE`---in R, any nonzero integer coerced to a logical value evaluates to `TRUE`---and`renderPlot()` will therefore add the density plot of the sample and the confidence interval to the density plot of the population.
 
 This process will repeat every time the user requests a sample.  Since all positive integers evaluate to `TRUE`, the current sample and confidence interval, as produced by `observeEvent()` and recorded in `rv`, will be added to the population curve.
 
@@ -206,7 +205,7 @@ shinyAppDir(
 
 The complete code may be viewed  <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_02/app.R" target = "_blank">here</a>.  In what follows we'll point out the important additions.
 
-First, note that `rv` contains two new values:  `rv$sim` and `rv$good`.
+First, note that `rv` contains two new values:  `rv$sims` and `rv$good`.
 
 ```{r eval = FALSE}
   rv <- reactiveValues(sample = NULL, 
@@ -240,7 +239,7 @@ We have new output, created by a call to `renderTable()`:
     }, include.rownames = FALSE)
 ```
 
-In the above code, the argument `include,rownames = FALSE` is being passed to the function `xtable()` that creates a formatted table from the data frame `df`.  This prevents a useless row number from appearing in the resulting table.
+In the above code, the argument `include,rownames` is being passed to an underlying function `xtable()` that creates a formatted table from the data frame `df`.  Setting `include.rownames` to `FALSE` precludes a useless row number from appearing in that table.
 
 ## Version 3:  Conditional Panels
 
@@ -250,7 +249,7 @@ Version 2 keeps track, but right now that's worse than the memory-less Version 1
 
 We also want to study coverage properties for other populations besides the slightly skewed one that is provided for us.  If we were to add such a feature, then it would be wise to allow the app to start afresh.
 
-The new version below addresses two of the above issues by adding a start-over feature.
+The new version below addresses two of the above issues by adding a start-over feature and conditionally hiding certain input widgets.
 
 ```{r, echo=FALSE}
 shinyAppDir(
@@ -265,7 +264,7 @@ shinyAppDir(
 
 You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_03/app.R" target = "_blank">here</a>.  In what follows we'll discuss how the start-over feature was implemented.
 
-The crucial Shiny concept here is the concept of a *conditional panel*.  We've got two in the sidebar panel and another in the main panel:
+The crucial Shiny concept here is the concept of a *conditional panel*.  We've got two of them in the sidebar panel, and another in the main panel:
 
 ```{r eval = FALSE}
   sidebarPanel(
@@ -291,9 +290,9 @@ The crucial Shiny concept here is the concept of a *conditional panel*.  We've g
         )
 ```
 
-AS a Shiny programmer you can get by without thinking about JavaScript, with the one important exception:  conditional panels.  The `condition` argument takes a JavaScript Boolean expression.  You can could it up with operators that look like those of R, but note that the JavaScript Boolean values are lower case:  `true` and `false`.  You can refer to input and output objects, but you have to use a `.` in place of a `$`.  If you want to learn more about Boolean expression in JavaScript, start [here](http://www.w3schools.com/js/js_comparisons.asp).
+AS a Shiny programmer you can get by without thinking about JavaScript, but conditional panels are an important exception to this general rule.  The `condition` argument takes a JavaScript Boolean expression.  You can build it up with operators that look like those of R, but note that the JavaScript Boolean values are lower case:  `true` and `false`.  Your expression can refer to input and output objects, but you have to use a `.` in place of a `$`:  thus `output.beginning` as opposed to `output$beginning`.  If you want to learn more about Boolean expression in JavaScript, start [here](http://www.w3schools.com/js/js_comparisons.asp).
 
-We have a new action button, with value `input$reset`.  Hence there is a corresponding new `rv` value named `rv$beginning` that is initially set to `TRUE`:
+We have a new action button, with value `input$reset`.  Hence there is a corresponding new `rv` value named `rv$begin` that is initially set to `TRUE`:
 
 ```{r eval = FALSE}
   rv <- reactiveValues(sample = NULL, 
@@ -321,7 +320,7 @@ Accordingly there is a new observer to perform appropriate updates to `rv` in re
                )
 ```
 
-In order for the Boolean expressions in the conditional panels to express whether or not we are starting over, we need to create the appropriate output object:
+In order for Boolean expressions in conditional panels to be able to express whether or not we are starting over, we need to create the appropriate output object:
 
 ```{r eval = FALSE}
   output$beginning <- reactive({
@@ -332,7 +331,7 @@ In order for the Boolean expressions in the conditional panels to express whethe
   outputOptions(output, 'beginning', suspendWhenHidden=FALSE)
 ```
 
-The second statement in the code above is immensely important.  Sometimes an output is being shown to the user (for instance:  a plot in a tab panel that the user has selected), and at other times it may be hidden.  Since there is no `...Output()` function in any panel that displays `output$beginning` to the user, this object is always hidden.  Nevertheless, we want it to update whenever `rv$begin` changes value:  we don't want this hidden object to be "suspended."  `outputOptions()` permits us to force the object to be responsive at all times, even though it is never shown to the user.
+The second statement in the code above is immensely important.  Sometimes an output object is being shown to the user (for instance:  a plot in a tab panel that the user has selected), and at other times it may be hidden.  The default behavior of Shniny is to *suspend* an object when it is hidden, meaning that when it is hidden the code to make it won't be run, even if there are changes in values on which that code depends reactively.  Since there is no `...Output()` function in any panel that displays `output$beginning` to the user, this object is always hidden.  Nevertheless, we need it to update whenever `rv$begin` changes value:  in Shiny terms, we don't want this hidden object to be suspended.  `outputOptions()` permits us to force the object to be responsive at all times.
 
 Note finally the addition to the observer of `input$takeSample`:
 
@@ -345,7 +344,9 @@ Note finally the addition to the observer of `input$takeSample`:
                )
 ```
 
-As soon as a sample is requested, we want to get get away from the "set-up" elements of the sidebar panel, and to start adding the sample and confidence intervals to our plot.  We can now use `rv$begin` to control whether the sample and interval are to be added.  In the call to `renderPlot()` we now find:
+As soon as a sample is requested the `FALSE` value of `rv$begin` is passed on to `output$beginning, so that the conditional panels will hide "set-up" widgets in the sidebar panel.
+
+Of course we also want to start adding the sample and confidence intervals to our plot.  Hence we also use `rv$begin` to control whether the sample and interval are to be added.  In the call to `renderPlot()` we now find:
 
 ```{r eval = FALSE}
     if (! rv$begin) {
@@ -353,7 +354,6 @@ As soon as a sample is requested, we want to get get away from the "set-up" elem
       # ...
       # now the interval
       # ...
-      rug(rv$sample)
       }
 ```
 
@@ -374,7 +374,7 @@ shinyAppDir(
 
 You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_04/" target = "_blank">here</a>:  once again our discussion will highlight new features.
 
-First of all, note that setting up four populations requires a fairly long block of code.  In order to keep the `app.R` as brief and easy-to-scan as possible, we offload population creation to a separate R script (`setup.R`, here stored in the same directory as `app.R') and source it in at the beginning:
+First of all, note that setting up four populations requires a fairly long block of code.  In order to keep the `app.R` as brief and easy-to-scan as possible, we offload population creation to a separate R script (`setup.R`, here stored in the same directory as `app.R`) and source it in at the beginning:
 
 ```{r eval = FALSE}
 library(shiny)
@@ -384,7 +384,7 @@ library(scales) # for transparency in density-plot fill
 source("setup.R")
 ```
 
-The crucial addition to `ui` is:
+The crucial addition to `ui` is the following widget:
 
 ```{r eval = FALSE}
 selectInput(inputId="popDist",label="Population Shape",
@@ -561,7 +561,7 @@ We have also added, to the conditional panel that contains the plot of the popul
       )
 ```
 
-The more complex the app becomes, the more you want to give the user by way of explanation.
+The more complex the app becomes, the more you want to give the user in the way of explanation.
 
 
 ## Version 6:  Tabset Panels
@@ -570,7 +570,7 @@ The more complex the app becomes, the more you want to give the user by way of e
 
 Suppose that our students are told about how t-interval are made from the t-statistic.  Then they are liable to have been told as well about how the nominal levels of confidence for t-interval are derived from quantiles of the relevant t-curve, that the nominal and actual levels of confidence are the same provided that the t-statistic has exactly a t-curve distribution, and that departures from normality in the population therefore are liable to result in differences between the nominal and actual levels of confidence.
 
-In order to reduce (somewhat) the probability that this such theory-talk will be discounted entirely by students, we could opt to look at our app results from a new point of view:  we could compare the "theoretical" t-curve with a density plot of the t-statistics associated with each of the samples that have been taken so far.  The next version of the app (below), implements this comparison.
+In order to reduce (somewhat) the probability that such theory-talk will be discounted entirely by students, we could opt to look at our app-results from a new point of view:  we could compare the "theoretical" t-curve with a density plot of the t-statistics associated with each of the samples that have been taken so far.  The next version of the app (below), implements this comparison.
 
 ```{r echo = FALSE}
 shinyAppDir(
@@ -683,7 +683,7 @@ The code that produces the t-statistic density plot requires careful choice of b
 
 ### The App
 
-Could the user learn something by viewing several confidence intervals at once?  The app below provides such an option.  It also a tab containing information about the app.
+Could the user learn something by viewing several confidence intervals at once?  The app below provides such an option.  It also adds a tab containing information about the app.
 
 ```{r echo = FALSE}
 shinyAppDir(
@@ -797,9 +797,63 @@ navbarPage(
 
 The aim is to make the "fifty-at-a-time" app function independently of the original "coverage properties" app.  Accordingly it requires its own set of inputs and outputs:  hence the considerable increase in the amount of code.
 
-Note also that two information HTML files appear in their own subdirectory `infoFiles`.  This is done because they are each being generated by corresponding R Markdown files (`help.Rmd` and `aboutapp.Rmd`)  Since Shiny servers can host R markdown documents and are therefore disposed to look for them in the root directory, the R Markdown files should not appear at the root level.
+Note also that two informational HTML files appear in their own subdirectory `infoFiles`.  This is done because they are each being generated by corresponding R Markdown files (`help.Rmd` and `aboutapp.Rmd`)  Since Shiny servers can host R Markdown documents and are therefore disposed to look for them in the root directory, the R Markdown files should not appear at the root level.
 
-By now the app has gotten become fairly flexible and informative.  Still I'm sure that you can think of a few extra bells and whistles to add.  if you teach bootstrap intervals, you might might want to incorporate the app into them somehow (or do away with the old-fashioned t-interval entirely).  You are welcome to proceed as you wish.  My intent has not been to create One App to Rule Them All, but rather to persuade you that you can design a better app on your own, without much more than the R knowledge that you already possess.
+One minor new feature of this verison is worthy of note.  In the observer to `input$takeSample` we now find:
+
+```{r eval = FALSE}
+observeEvent(
+    input$takeSample, 
+    {
+    # if user is at the beginning or has started over, and one sample at a time is
+    # requested, then we will assume that the user would prefer to stat on the "Latest Interval"
+    # tabPanel, rather than the "t-statistic" tabPanel.  Assure this:
+    if (rv$begin && input$sims == 1) {
+      updateTabsetPanel(session, "coverageTabsetPanel", selected = "Latest Interval")
+      }
+    # ...
+    }
+    )
+```
+
+Shiny has a number of `update...()` functions that can selectively change values on a user.  In the code above, the update makes sure that when the user is at the beginning of a simulation process and is requesting only one sample at a time, then he or she will, upon request of the sample, be shown the "Latest Interval" tab panel, even if he or she had most recently selected the "t-statistic" panel.  I have found that in order for the current version of Shiny (0.12.1) to heed this function, the titles for the separate tab panels in the tabset have to be provided explicity:
+
+```{r eval = FALSE}
+              tabsetPanel(
+                 id = "coverageTabsetPanel",
+                 tabPanel(
+                   title = "Latest Interval",
+                   # ...
+                   ),
+                 tabPanel(
+                   title = "t-statistic",
+                   # ...
+                   )
+                 )
+```
+
+As far the panels themselves are convered, their title can be recognized by R's positional matching of arguments:
+
+```{r eval = FALSE}
+              tabsetPanel(
+                 id = "coverageTabsetPanel",
+                 tabPanel(
+                   "Latest Interval", # comes first, so assigned to argument 'title'
+                   # ...
+                   ),
+                 tabPanel(
+                   "t-statistic",  # comes first, so assigned to argument 'title'
+                   # ...
+                   )
+                 )
+```
+
+
+For some reason, however, this won't suffice for `updateTabsetPanel()` to work.
+
+### Time to Stop
+
+By now the app has gotten become fairly flexible and informative.  Still I'm sure that you can think of a few extra bells and whistles to add.  If you teach bootstrap intervals, you might might want to incorporate the app into them somehow (or do away with the old-fashioned t-interval entirely).  You are welcome to proceed as you wish.  My intent has not been to create One App to Rule Them All, but rather to persuade you that you can design a better app on your own, without much more in the way of programming skills than the R knowledge that you already possess.
 
 
 ## Cautions, and Further Resources
