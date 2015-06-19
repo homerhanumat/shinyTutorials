@@ -35,7 +35,7 @@ The code in the above repository is licensed as fee software:  please feel free 
 
 ### The App
 
-We'll start very simple confidence-interval app (below).  Play with it until you understand what it does.
+We'll start a very simple confidence-interval app (below).  Play with it until you understand what it does.
 
 ```{r, echo=FALSE}
 shinyAppDir(
@@ -169,17 +169,17 @@ The code to set the random seed:
 
 appears inside the `ui()` function.  Hence it is run once for each user.  Since users are likely to app at different times, they are all likely to experience different results.  Usually this is what we desire when class members use an app together.
 
-When the app begins, the `rv` list is created with the call to `reactiveValues()` and all of whihc are iniatially set to `NULL`..  The user may or may not select a new sample size and confidence level, but since the `rv` values have been set the `renderPlot()` function, having a body that contains these values, is obliged to spring into action and to make `output$plotSample`.  However, before the user requests a sample, the value of the action button, `input$takeSample` is 0.  Hence the `if` clause in `renderPlot()` will evaluate to `FALSE` and the only thing produced is a density plot of the population.
+When the app begins, the `rv` list is created with the call to `reactiveValues()` and all values in the list are iniatially set to `NULL`.  The user may or may not select a new sample size and confidence level, but since the `rv` values have been set the `renderPlot()` function, having a body that contains these values, is obliged to spring into action and to make `output$plotSample`.  However, before the user requests a sample, the value of the action button, `input$takeSample` is 0.  Hence the `if` clause in `renderPlot()` will evaluate to `FALSE` and the only thing produced is a density plot of the population.
 
 If this app were a rock band, then `reactiveValues()` and `observeEvent()` would surely be the drummer and bass guitar player.  Working together, this pair makes the underlying rhythm and helps the other players stay on track.
 
-Their mutual synergy is evident as soon as the user requests a sample. Requesting a sample entails pressing the action button, whihc changes the value of `input$takeSample`.  `observeEvent()` takes note of this occurence.  This function:
+Their mutual synergy is evident as soon as the user requests a sample. Requesting a sample entails pressing the action button, which changes the value of `input$takeSample`.  `observeEvent()` takes note of this occurence.  This function:
 
 * runs the code to produce a random sample of the desired size,
 * computes a confidence interval of the desired level of confidence, and
 * updates `rv` with the relevant information.
 
-Since the elements of `rv` are all reactive, any change in any one of them suffices to invalidate `output$plotSample`.  Hence R runs `renderPlot()` again.  Whenever the user requests a sample, `input$takeSample`, which began at 0, increases by one unit.  Hence in the `if` statement the condition `input$takeSample` will evaluate to `TRUE`---in R, any nonzero integer coerced to a logical value evaluates to `TRUE`---and`renderPlot()` will therefore add the density plot of the sample and the confidence interval to the density plot of the population.
+Since the elements of `rv` are all reactive, a change in any one of them suffices to invalidate `output$plotSample`.  Hence R runs `renderPlot()` again.  Whenever the user requests a sample, `input$takeSample`, which began at 0, increases by one unit.  Hence in the `if` statement the condition `input$takeSample` will evaluate to `TRUE`---in R, any nonzero integer coerced to a logical value evaluates to `TRUE`---and`renderPlot()` will therefore add the density plot of the sample and the confidence interval to the density plot of the population.
 
 This process will repeat every time the user requests a sample.  Since all positive integers evaluate to `TRUE`, the current sample and confidence interval, as produced by `observeEvent()` and recorded in `rv`, will be added to the population curve.
 
