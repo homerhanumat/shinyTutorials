@@ -10,9 +10,9 @@ runtime: shiny
 
 ### Overview
 
-Shiny makes it easy for R users to develop responsive, R-powered web applications.  As you probably know, either from your own initial forays into Shiny or from the [Shiny Tutorial](http://shiny.rstudio.com/tutorial/), creating simple apps is no problem, and probably you have some ideas for teaching apps that could be written using just the tools developed in the Tutorial.
+Shiny makes it easy for R users to develop responsive, R-powered web applications.  As you probably know, either from your own initial forays into Shiny or from the <a href = "http://shiny.rstudio.com/tutorial/" target = "_blank">Shiny Tutorial</a>, creating simple apps is no problem, and probably you have some ideas for teaching apps that could be written using just the tools developed in the Tutorial.
 
-But some teaching apps appear quite complex.  Consider, for example, [this app](http://homer.shinyapps.io/SlowGoodness) that aims to introduce the student to the $\chi^2$ Test for Goodness of Fit.  The app takes the user through a simulation process, keeping track of the results of simulations as they accumulate, permitting the viewer to consider the results from several points of view, and allowing the viewer to start over, perhaps with new data.
+But some teaching apps appear quite complex.  Consider, for example, <a href = "http://homer.shinyapps.io/SlowGoodness" target = "_blank">this app</a> which aims to introduce the student to the $\chi^2$ Test for Goodness of Fit.  The app takes the user through a simulation process, keeping track of the results of simulations as they accumulate, permitting the viewer to consider the results from several points of view, and allowing the viewer to start over, perhaps with new data.
 
 The aim of this tutorial is to take you step-by-step through the construction of a reasonably full-featured app that lets students explore, through simulation, the coverage properties of the classical t-intervals for a population mean.  After completing the tutorial you will be able to write your own simulation apps, hopefully being spared some of the struggle that I went through when I first learned Shiny in the Spring of 2014.
 
@@ -23,13 +23,13 @@ Please feel free to copy and re-use the code in this repository:  It's under a G
 This tutorial assumes that you have:
 
 * **familiarity with R**.  We'll assume some basic facility in R programming and that you can at least read and understand R code that creates custom plots in R's base graphics system.  For the most part our explanation of R code will be limited to its relationship to app-building.
-* **an introductory knowledge of Shiny**.  All necessary prerequisites inthis area can be acquired by watching Garret Grolemund's excellent three-part webinar on *How to Stat with Shiny*.  (See R Studio's [webinars](http://www.rstudio.com/resources/webinars/) page.)
+* **an introductory knowledge of Shiny**.  All necessary prerequisites inthis area can be acquired by watching Garret Grolemund's excellent three-part webinar on *How to Stat with Shiny*.  (See R Studio's <a href = "http://www.rstudio.com/resources/webinars/" target = "_blank">webinars</a> page.)
 
 ### Acquiring Source Code
 
 All of the materials for this tutorial are available in my GitHub repository:
 
->[https://github.com/homerhanumat/shinyTutorials](https://github.com/homerhanumat/shinyTutorials)
+><a href = "https://github.com/homerhanumat/shinyTutorials" target = "_blank">https://github.com/homerhanumat/shinyTutorials</a>
 
 If you use Git, you could clone the repository into a new R Project.  Otherwise, simply visit the repository and click the `Download Zip` button.
 
@@ -50,7 +50,7 @@ shinyAppDir(
 
 ### The Code
 
-The complete code may be viewed  [here](https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_01/app.R)).  Since it's not a great deal of code, we also show it below:
+The complete code may be viewed  <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_01/app.R" target = "_blank">here</a>.  Since it's not a great deal of code, we also show it below:
 
 ```{r eval = FALSE}
 ## Initial App
@@ -204,7 +204,7 @@ shinyAppDir(
 
 ### Code and Discussion
 
-You can study the complete code [here](https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_02/app.R):  in what follows we'll point out the important additions.
+The complete code may be viewed  <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_02/app.R" target = "_blank">here</a>.  In what follows we'll point out the important additions.
 
 First, note that `rv` contains two new values:  `rv$sim` and `rv$good`.
 
@@ -263,7 +263,7 @@ shinyAppDir(
 
 ### Code and Discussion
 
-You can study the complete code [here](https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_03/app.R):  in what follows we'll discuss how the start-over feature was implemented.
+You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_03/app.R" target = "_blank">here</a>.  In what follows we'll discuss how the start-over feature was implemented.
 
 The crucial Shiny concept here is the concept of a *conditional panel*.  We've got two in the sidebar panel and another in the main panel:
 
@@ -372,7 +372,7 @@ shinyAppDir(
 )
 ```
 
-You can study the complete code [here](https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_04/):  once again our discussion will highlight new features.
+You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_04/" target = "_blank">here</a>:  once again our discussion will highlight new features.
 
 First of all, note that setting up four populations requires a fairly long block of code.  In order to keep the `app.R` as brief and easy-to-scan as possible, we offload population creation to a separate R script (`setup.R`, here stored in the same directory as `app.R') and source it in at the beginning:
 
@@ -485,7 +485,7 @@ shinyAppDir(
 
 ### Code and Discussion
 
-You can study the complete code [here](https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_05/):  once again our discussion will highlight new features.
+You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_05/" target = "_blank">here</a>:  once again we will highlight new features.
 
 The set-up version of the sidebar panel has a new input widget:
 
@@ -583,7 +583,7 @@ shinyAppDir(
 
 ### Code and Discussion.
 
-You can study the complete code [here](https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_06/):  once again our discussion will highlight new features.
+You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_06/" target = "_blank">here</a>:  once again our discussion will highlight new features.
 
 In the `ui`, the main panel now contains conditional panel that takes the form of a tab-set:
 
@@ -698,7 +698,7 @@ If you wish you may also view this final version in isolation on the <a href = "
 
 ### Code and Discussion
 
-You can study the complete code [here](https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_07/):  once again our discussion will highlight new features.
+You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_07/" target = "_blank">here</a>:  once again our discussion will highlight new features.
 
 
 When you examine the file structure of the source code on GitHub, you will notice that we have switched from single-file format(`app.R`) to the older two-file format (`ui.R` and `server.R`).  It's good to do this as your code gets longer.
@@ -902,17 +902,17 @@ shinyAppDir(
 
 #### R Studio Resources
 
-R Studio provides excellent, up-to-date documentation on Shiny in a series of [articles](http://shiny.rstudio.com/articles/).  Every single one of them is worth reading.  You will also find yourself consulting their [function reference](http://shiny.rstudio.com/reference/shiny/latest/).  Finally, the [gallery](http://shiny.rstudio.com/gallery/) is an excellent source of inspiration (and code to copy and modify).
+R Studio provides excellent, up-to-date documentation on Shiny in a series of <a href = "http://shiny.rstudio.com/articles/" target = "_blank">articles</a>.  Every single one of them is worth reading.  You will also find yourself consulting their <a href = "http://shiny.rstudio.com/reference/shiny/latest/" target = "_blank">function reference</a>.  Finally, the <a href = "http://shiny.rstudio.com/gallery/" target = "_blank">gallery</a> is an excellent source of inspiration (and code to copy and modify).
 
 #### shinyjs
 
-[Dean Attali](http://deanattali.com/) is the author of the `shinyjs` package, a collection of useful add-on functions.  Instructors may be especially interested in:
+<a href = "http://deanattali.com/" target = "_blank">Dean Attali</a> is the author of the `shinyjs` package, a collection of useful add-on functions.  Instructors may be especially interested in:
 
 * the `show`, `hide` and `toggle` functions.  They come with options for animation, and so allow you to gently disclose or hide various items such as input widgets.
 * the `info` function, to provide a helpful pop-up message.
 
 Dean also has some useful tutorials in the form of blog posts.  See especially:
 
-* [Mimicking a Google Form with a Shiny App](http://deanattali.com/2015/06/14/mimicking-google-form-shiny/);
-* [How to get your very own RStudio Server and Shiny Server with DigitalOcean](http://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/).  If you run your own Shiny Server at your institution, this post contains great IT advice on how to make Shiny apps run as desired.
+* <a href = "http://deanattali.com/2015/06/14/mimicking-google-form-shiny/" target = "_blank">Mimicking a Google Form with a Shiny App</a>;
+* <a href = "http://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/" target = "_blank">How to get your very own RStudio Server and Shiny Server with DigitalOcean</a>.  If you run your own Shiny Server at your institution, this post contains great IT advice on how to make Shiny apps run as desired.
 

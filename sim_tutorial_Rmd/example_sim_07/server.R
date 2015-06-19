@@ -323,8 +323,8 @@ function(input, output, session) {
    rv2$yMax <- switch(input$popDist2,
                       normal = 1.5*max(normalDen$y),
                       skew = 1.5*max(skewDen$y),
-                      superSkew = 1.5*max(superSkewDen$y),
-                      oultiers = 1.5*max(oulierDen$y))
+                      superskew = 1.5*max(superSkewDen$y),
+                      outliers = 1.5*max(outlierDen$y))
    }
    )
 
