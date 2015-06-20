@@ -29,7 +29,7 @@ All of the materials for this tutorial are available in my GitHub repository:
 
 ><a href = "https://github.com/homerhanumat/shinyTutorials" target = "_blank">https://github.com/homerhanumat/shinyTutorials</a>
 
-The code in the above repository is licensed as fee software:  please feel free to copy and modify it for your own apps.  You can also offer feedback on GitHub by opening an Issue.  If you use Git, you could clone the repository into a new R Project.  Otherwise simply visit the repository and click the `Download Zip` button.
+The code in the above repository is licensed as fee software:  please feel free to copy and modify it for your own apps.  If you use Git, you could clone the repository into a new R Project.  Otherwise simply visit the repository and click the `Download Zip` button.  You can also offer feedback on GitHub by opening an Issue.
 
 ## Version 1:  The Bare-Bones App
 
@@ -46,7 +46,7 @@ shinyAppDir(
 )
 ```
 
-### The Code
+### Code and Discussion
 
 The complete code may be viewed  <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_01/app.R" target = "_blank">here</a>, but since it's not a great deal of code (yet), we also show it below:
 
@@ -157,7 +157,7 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
-### Discussion
+#### Session vs. User Considertions
 
 The code determining the population is placed outside of the `ui()` and `server()` functions.  This means that it will be run only once, at the beginning of the R session, even if multiple users are viewing the app.  Since in this bare-bones version our users can't pick another population, it's most efficient to run the code once for everyone.
 
@@ -168,6 +168,8 @@ The code to set the random seed:
 ```
 
 appears inside the `ui()` function.  Hence it is run once for each user.  Since users are likely to app at different times, they are all likely to experience different results.  Usually this is what we desire when class members use an app together.
+
+#### Reactive Values, User Input and Observation
 
 When the app begins, the `rv` list is created with the call to `reactiveValues()` and all values in the list are iniatially set to `NULL`.  The user may or may not select a new sample size and confidence level, but since the `rv` values have been set the `renderPlot()` function, having a body that contains these values, is obliged to spring into action and to make `output$plotSample`.  However, before the user requests a sample, the value of the action button, `input$takeSample` is 0.  Hence the `if` clause in `renderPlot()` will evaluate to `FALSE` and the only thing produced is a density plot of the population.
 
@@ -264,6 +266,8 @@ shinyAppDir(
 
 You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_03/app.R" target = "_blank">here</a>.  In what follows we'll discuss how the start-over feature was implemented.
 
+#### Conditional Panels
+
 The crucial Shiny concept here is the concept of a *conditional panel*.  We've got two of them in the sidebar panel, and another in the main panel:
 
 ```{r eval = FALSE}
@@ -290,7 +294,11 @@ The crucial Shiny concept here is the concept of a *conditional panel*.  We've g
         )
 ```
 
-AS a Shiny programmer you can get by without thinking about JavaScript, but conditional panels are an important exception to this general rule.  The `condition` argument takes a JavaScript Boolean expression.  You can build it up with operators that look like those of R, but note that the JavaScript Boolean values are lower case:  `true` and `false`.  Your expression can refer to input and output objects, but you have to use a `.` in place of a `$`:  thus `output.beginning` as opposed to `output$beginning`.  If you want to learn more about Boolean expression in JavaScript, start [here](http://www.w3schools.com/js/js_comparisons.asp).
+#### JavaScript Conditions
+
+As a Shiny programmer you can get by without thinking about JavaScript, but conditional panels are an important exception to this general rule.  The `condition` argument takes a JavaScript Boolean expression.  You can build it up with operators that look like those of R, but note that the JavaScript Boolean values are lower case:  `true` and `false`.  Your expression can refer to input and output objects, but you have to use a `.` in place of a `$`:  thus `output.beginning` as opposed to `output$beginning`.  If you want to learn more about Boolean expression in JavaScript, start [here](http://www.w3schools.com/js/js_comparisons.asp).
+
+#### A New Observer
 
 We have a new action button, with value `input$reset`.  Hence there is a corresponding new `rv` value named `rv$begin` that is initially set to `TRUE`:
 
@@ -320,6 +328,8 @@ Accordingly there is a new observer to perform appropriate updates to `rv` in re
                )
 ```
 
+#### Options for Output Suspension
+
 In order for Boolean expressions in conditional panels to be able to express whether or not we are starting over, we need to create the appropriate output object:
 
 ```{r eval = FALSE}
@@ -332,6 +342,8 @@ In order for Boolean expressions in conditional panels to be able to express whe
 ```
 
 The second statement in the code above is immensely important.  Sometimes an output object is being shown to the user (for instance:  a plot in a tab panel that the user has selected), and at other times it may be hidden.  The default behavior of Shniny is to *suspend* an object when it is hidden, meaning that when it is hidden the code to make it won't be run, even if there are changes in values on which that code depends reactively.  Since there is no `...Output()` function in any panel that displays `output$beginning` to the user, this object is always hidden.  Nevertheless, we need it to update whenever `rv$begin` changes value:  in Shiny terms, we don't want this hidden object to be suspended.  `outputOptions()` permits us to force the object to be responsive at all times.
+
+#### A Tweak to the `takeSample` Observer
 
 Note finally the addition to the observer of `input$takeSample`:
 
@@ -366,13 +378,17 @@ The next version (below) permits the user at set-up to choose from four differen
 ```{r echo = FALSE}
 shinyAppDir(
   "example_sim_04/",
-  options=list(
-    width="100%", height=650
+  options = list(
+    width = "100%", height = 600
   )
 )
 ```
 
+### Code and Discussion
+
 You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_04/" target = "_blank">here</a>:  once again our discussion will highlight new features.
+
+#### Auxiliary Files for Complex Apps
 
 First of all, note that setting up four populations requires a fairly long block of code.  In order to keep the `app.R` as brief and easy-to-scan as possible, we offload population creation to a separate R script (`setup.R`, here stored in the same directory as `app.R`) and source it in at the beginning:
 
@@ -383,6 +399,8 @@ library(scales) # for transparency in density-plot fill
 ## Set up underlying populations:
 source("setup.R")
 ```
+
+#### Handling Choice of Population
 
 The crucial addition to `ui` is the following widget:
 
@@ -478,7 +496,7 @@ Once they get these points, however, they will want to achieve good estimates of
 shinyAppDir(
   "example_sim_05/",
   options=list(
-    width="100%", height=900
+    width="100%", height=800
   )
 )
 ```
@@ -486,6 +504,8 @@ shinyAppDir(
 ### Code and Discussion
 
 You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_05/" target = "_blank">here</a>:  once again we will highlight new features.
+
+#### Handling "Expensive" Computations
 
 The set-up version of the sidebar panel has a new input widget:
 
@@ -543,6 +563,8 @@ Note that in the code above only the last sample (the final row in the matrix), 
 
 Thus the plot shows only the most recent sample.
 
+#### Adding Explanations for the User
+
 We have also added, to the conditional panel that contains the plot of the population with sample, a list of clarifying remarks:
 
 ```{r eval = FALSE}
@@ -576,7 +598,7 @@ In order to reduce (somewhat) the probability that such theory-talk will be disc
 shinyAppDir(
   "example_sim_06/",
   options=list(
-    width="100%", height=900
+    width="100%", height=800
   )
 )
 ```
@@ -689,7 +711,7 @@ Could the user learn something by viewing several confidence intervals at once? 
 shinyAppDir(
   "example_sim_07/",
   options=list(
-    width="100%", height=900
+    width="100%", height=800
   )
 )
 ```
@@ -700,6 +722,7 @@ If you wish you may also view this final version in isolation on the <a href = "
 
 You can study the complete code <a href = "https://github.com/homerhanumat/shinyTutorials/blob/master/example_sim_07/" target = "_blank">here</a>:  once again our discussion will highlight new features.
 
+#### Adding the Related App
 
 When you examine the file structure of the source code on GitHub, you will notice that we have switched from single-file format(`app.R`) to the older two-file format (`ui.R` and `server.R`).  It's good to do this as your code gets longer.
 
@@ -797,7 +820,11 @@ navbarPage(
 
 The aim is to make the "fifty-at-a-time" app function independently of the original "coverage properties" app.  Accordingly it requires its own set of inputs and outputs:  hence the considerable increase in the amount of code.
 
+#### Adding HTML Files
+
 Note also that two informational HTML files appear in their own subdirectory `infoFiles`.  This is done because they are each being generated by corresponding R Markdown files (`help.Rmd` and `aboutapp.Rmd`)  Since Shiny servers can host R Markdown documents and are therefore disposed to look for them in the root directory, the R Markdown files should not appear at the root level.
+
+#### Updating Values on the User
 
 One minor new feature of this verison is worthy of note.  In the observer to `input$takeSample` we now find:
 
@@ -816,7 +843,19 @@ observeEvent(
     )
 ```
 
-Shiny has a number of `update...()` functions that can selectively change values on a user.  In the code above, the update makes sure that when the user is at the beginning of a simulation process and is requesting only one sample at a time, then he or she will, upon request of the sample, be shown the "Latest Interval" tab panel, even if he or she had most recently selected the "t-statistic" panel.  I have found that in order for the current version of Shiny (0.12.1) to heed this function, the titles for the separate tab panels in the tabset have to be provided explicity:
+Shiny has a number of `update...()` functions that can selectively change values on a user.  In the code above, the update makes sure that when the user is at the beginning of a simulation process and is requesting only one sample at a time, then he or she will, upon request of the sample, be shown the "Latest Interval" tab panel, even if he or she had most recently selected the "t-statistic" panel.
+
+If you want to use an `update...()` function, make sure to include `session` as an argument to the `server` function:
+
+
+```{r eval = FALSE}
+function(input, output, session) {
+  # body of server function
+}
+```
+
+
+**Note**:  I have found that in order for the current version of Shiny (0.12.1) to heed this function, the titles for the separate tab panels in the tabset have to be provided explicity:
 
 ```{r eval = FALSE}
               tabsetPanel(
@@ -851,7 +890,7 @@ As far the panels themselves are convered, their title can be recognized by R's 
 
 For some reason, however, this won't suffice for `updateTabsetPanel()` to work.
 
-### Time to Stop
+## Time to Stop
 
 By now the app has gotten become fairly flexible and informative.  Still I'm sure that you can think of a few extra bells and whistles to add.  If you teach bootstrap intervals, you might might want to incorporate the app into them somehow (or do away with the old-fashioned t-interval entirely).  You are welcome to proceed as you wish.  My intent has not been to create One App to Rule Them All, but rather to persuade you that you can design a better app on your own, without much more in the way of programming skills than the R knowledge that you already possess.
 
