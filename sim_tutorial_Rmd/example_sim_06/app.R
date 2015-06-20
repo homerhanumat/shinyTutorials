@@ -113,7 +113,7 @@ ui <- fluidPage(
   mainPanel(
     conditionalPanel(
       condition = "input.takeSample == 0 || output.beginning == true",
-      plotOutput("initialGraph"),
+      plotOutput("initialGraphV6"),
       HTML("<ul>
               <li>The population density curve is in red.</li>
               <li>The vertical line marks the population mean.</li>
@@ -261,7 +261,7 @@ server <- function(input, output) {
   # needed for the conditional panels to work
   outputOptions(output, 'beginning', suspendWhenHidden=FALSE)
   
-  output$initialGraph <- renderPlot({
+  output$initialGraphV6 <- renderPlot({
     # the underlying population
     plot(rv$popDen$x,rv$popDen$y,type="l",lwd=3,col="red",
          main="Density Curve of Population",

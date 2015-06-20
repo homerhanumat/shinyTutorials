@@ -40,7 +40,7 @@ navbarPage(
            mainPanel(
              conditionalPanel(
                condition = "input.takeSample == 0 || output.beginning == true",
-               plotOutput("initialGraph"),
+               plotOutput("initialGraphV7"),
                HTML("<ul>
                        <li>The population density curve is in red.</li>
                        <li>The vertical line marks the population mean.</li>
@@ -107,7 +107,7 @@ navbarPage(
     mainPanel(
       conditionalPanel(
         condition = "input.takeSample2 == 0 || output.beginning2 == true",
-        plotOutput("initialGraph2"),
+        plotOutput("initialGraphV72"),
         HTML("<ul>
                 <li>The population density curve is in red.</li>
                 <li>The vertical line marks the population mean.</li>

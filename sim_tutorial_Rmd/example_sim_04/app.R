@@ -107,11 +107,11 @@ ui <- fluidPage(
   mainPanel(
     conditionalPanel(
       condition = "output.beginning == true",
-      plotOutput("initialGraph")
+      plotOutput("initialGraphV4")
     ),
     conditionalPanel(
       condition = 'output.beginning == false',
-      plotOutput("plotSample"),
+      plotOutput("plotSampleV4"),
       tableOutput("summary")
     )
   ) # end MainPanel
@@ -222,7 +222,7 @@ server <- function(input, output) {
   # needed for the conditional panels to work
   outputOptions(output, 'beginning', suspendWhenHidden=FALSE)
   
-  output$initialGraph <- renderPlot({
+  output$initialGraphV4 <- renderPlot({
     # the underlying population
     plot(rv$popDen$x,rv$popDen$y,type="l",lwd=3,col="red",
          main="Density Curve of Population",
@@ -233,7 +233,7 @@ server <- function(input, output) {
     abline(v=rv$popMean,lwd=2)
   })
   
-  output$plotSample <- renderPlot({
+  output$plotSampleV4 <- renderPlot({
     # the underlying population
     plot(rv$popDen$x,rv$popDen$y,type="l",lwd=3,col="red",
          main="Density Curve of Population, with Random Sample",
@@ -261,7 +261,7 @@ server <- function(input, output) {
       points(rv$mean, intLevel, col = "blue", pch = 20,cex=2)
       rug(rv$sample)
       }
-    })  # end plotSample
+    })  # end plotSampleV4
   
   # summary of intervals so far
   output$summary <- renderTable({

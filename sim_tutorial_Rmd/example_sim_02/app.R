@@ -30,7 +30,7 @@ ui <- fluidPage(
     actionButton("takeSample","Sample Now")
     ), # end sidebarPanel
   mainPanel(
-    plotOutput("plotSample"),
+    plotOutput("plotSampleV2"),
     tableOutput("summary")
     )  # end mainPanel
   )
@@ -77,7 +77,7 @@ server <- function(input, output) {
                })
   
   
-  output$plotSample <- renderPlot({
+  output$plotSampleV2 <- renderPlot({
     # the underlying population
     plot(popDen$x,popDen$y,type="l",lwd=3,col="red",
          main="Density Curve of Population",
@@ -103,7 +103,7 @@ server <- function(input, output) {
       points(rv$mean, intLevel, col = "blue", pch = 20,cex=2)
       rug(rv$sample)
       }
-    })  # end plotSample
+    })  # end plotSampleV2
   
   # summary of intervals so far
   output$summary <- renderTable({

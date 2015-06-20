@@ -37,7 +37,7 @@ ui <- fluidPage(
       )
     ), # end sidebarPanel
   mainPanel(
-    plotOutput("plotSample"),
+    plotOutput("plotSampleV3"),
     conditionalPanel(
         condition = 'output.beginning == false',
         tableOutput("summary")
@@ -110,7 +110,7 @@ server <- function(input, output) {
   # needed for the conditional panels to work
   outputOptions(output, 'beginning', suspendWhenHidden=FALSE)
   
-  output$plotSample <- renderPlot({
+  output$plotSampleV3 <- renderPlot({
     # the underlying population
     plot(popDen$x,popDen$y,type="l",lwd=3,col="red",
          main="Density Curve of Population",
@@ -136,7 +136,7 @@ server <- function(input, output) {
       points(rv$mean, intLevel, col = "blue", pch = 20,cex=2)
       rug(rv$sample)
       }
-    })  # end plotSample
+    })  # end plotSampleV3
   
   # summary of intervals so far
   output$summary <- renderTable({

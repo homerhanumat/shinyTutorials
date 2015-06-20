@@ -207,7 +207,7 @@ function(input, output, session) {
   outputOptions(output, 'beginning', suspendWhenHidden=FALSE)
   
   # now for output that the user will see
-  output$initialGraph <- renderPlot({
+  output$initialGraphV7 <- renderPlot({
     # the underlying population
     plot(rv$popDen$x,rv$popDen$y,type="l",lwd=3,col="red",
          main="Density Curve of Population",
@@ -384,7 +384,7 @@ function(input, output, session) {
   # needed for the conditional panels to work
   outputOptions(output, 'beginning2', suspendWhenHidden=FALSE)
   
-  output$initialGraph2 <- renderPlot({
+  output$initialGraphV72 <- renderPlot({
     # the underlying population
     plot(rv2$popDen$x,rv2$popDen$y,type="l",lwd=3,col="red",
          main="Density Curve of Population",
