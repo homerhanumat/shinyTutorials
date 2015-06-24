@@ -273,7 +273,7 @@ The crucial Shiny concept here is the concept of a *conditional panel*.  We've g
 ```{r eval = FALSE}
   sidebarPanel(
     conditionalPanel(
-      condition = "input$takeSample == 0 || output.beginning == true",
+      condition = "input.takeSample == 0 || output.beginning == true",
       sliderInput(inputId="n","Sample Size n",value=2,min=2,max=50,step=1),
       helpText("How confident do you want to be that the population mean is contained",
              "within the confidence interval?   Use the slider to select a desired",
@@ -297,6 +297,7 @@ The crucial Shiny concept here is the concept of a *conditional panel*.  We've g
 #### JavaScript Conditions
 
 As a Shiny programmer you can get by without thinking about JavaScript, but conditional panels are an important exception to this general rule.  The `condition` argument takes a JavaScript Boolean expression.  You can build it up with operators that look like those of R, but note that the JavaScript Boolean values are lower case:  `true` and `false`.  Your expression can refer to input and output objects, but you have to use a `.` in place of a `$`:  thus `output.beginning` as opposed to `output$beginning`.  If you want to learn more about Boolean expression in JavaScript, start [here](http://www.w3schools.com/js/js_comparisons.asp).
+
 
 #### A New Observer
 
@@ -342,6 +343,20 @@ In order for Boolean expressions in conditional panels to be able to express whe
 ```
 
 The second statement in the code above is immensely important.  Sometimes an output object is being shown to the user (for instance:  a plot in a tab panel that the user has selected), and at other times it may be hidden.  The default behavior of Shniny is to *suspend* an object when it is hidden, meaning that when it is hidden the code to make it won't be run, even if there are changes in values on which that code depends reactively.  Since there is no `...Output()` function in any panel that displays `output$beginning` to the user, this object is always hidden.  Nevertheless, we need it to update whenever `rv$begin` changes value:  in Shiny terms, we don't want this hidden object to be suspended.  `outputOptions()` permits us to force the object to be responsive at all times.
+
+#### Avoid Screen Flashes
+
+You might be curous about the form of the conditonal for the first conditonal panel of the sidebar:
+
+```{r eval = FALSE}
+  sidebarPanel(
+    conditionalPanel(
+      condition = "input.takeSample == 0 || output.beginning == true",
+      # ...
+```
+
+When the app is first loaded, `output$beginning` has not yet been computed.  Therefore a conditional of the form `output.beginning == true`  would not compute to TRUE, and one would, for a brief moment, see a sidebar that does not include this panel.  As soon as `server` is run the conditional would evaluate to TRUE and the larger "set-up" portion of the panel would appear, but to avoid that annoying screen flash we augmented the conditional to include the element `input.takesample == 0`, which is indeed true at the outset.
+
 
 #### A Tweak to the `takeSample` Observer
 
@@ -901,7 +916,7 @@ By now the app has gotten become fairly flexible and informative.  Still I'm sur
 
 Sometimes you want the same output to appear in two or more places in your app.  Suppose, for instance, that you want to show a contingency table on two different tab panels in a tab set.  You might try something like this:
 
-```{r eval = FALSE}
+```{r echo = FALSE}
 library(shiny)
 
 ui <- fluidPage(
@@ -931,7 +946,7 @@ shinyApp(ui = ui, server = server)
 
 The result will be:
 
-```{r echo = FALSE}
+```{r eval = FALSE}
 shinyAppDir(
   "repeating_output/",
   options=list(
