@@ -1040,3 +1040,7 @@ Dean also has some useful tutorials in the form of blog posts.  See especially:
 * <a href = "http://deanattali.com/2015/06/14/mimicking-google-form-shiny/" target = "_blank">Mimicking a Google Form with a Shiny App</a>;
 * <a href = "http://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/" target = "_blank">How to get your very own RStudio Server and Shiny Server with DigitalOcean</a>.  If you run your own Shiny Server at your institution, this post contains great IT advice on how to make Shiny apps run as desired.
 
+#### Some of My Other Teaching Apps
+
+As you move beyond simulation apps you will want to incorporate other Shiny capabilities.  Feel free to consult my <a href = "https://github.com/homerhanumat/shinyGC" target = "_blank">Shiny-app repostitory on GitHub</a>, but be aware that the code in most of the apps begs for re-factoring.  You might begin with <a href = "https://github.com/homerhanumat/shinyGC/FindRegLine" target = "_blank">FindRegLine</a>, which illustrates writing student results to a data file so that students can compare their performance to that of other members of the class.
+
