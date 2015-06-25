@@ -1,7 +1,7 @@
 ---
 title: "Building an Instructional Simulation App in Shiny"
 author: "Homer White"
-date: "June 17, 2015"
+date: "June 24, 2015"
 output: html_document
 runtime: shiny
 ---
@@ -1005,6 +1005,22 @@ shinyAppDir(
   )
 )
 ```
+
+### Caution:  Colliding CSS in Included HTML
+
+The About and Help files in the final version of the app were generated from R Markdown sources.  The default CSS styling for such documents is a version of Bootstrap, whihc can sometimes conflict with the Bootstrap CSS of the app itself, with bizarre results.  If your app doesn't look right after inclusion of such an HTML file, simply remove the styling from the inlcuded file.  This can be done most conveniently in the R Markdown `yaml` front matter, e.g.:
+
+```{r eval = FALSE}
+---
+title: "About this App"
+author: "Homer White"
+date: "June 24, 2015"
+output: 
+  html_document:
+    theme:  null
+---
+```
+
 
 ### Further Resources
 
