@@ -29,7 +29,7 @@ All of the materials for this tutorial are available in my GitHub repository:
 
 ><a href = "https://github.com/homerhanumat/shinyTutorials" target = "_blank">https://github.com/homerhanumat/shinyTutorials</a>
 
-The code in the above repository is licensed as fee software:  please feel free to copy and modify it for your own apps.  If you use Git, you could clone the repository into a new R Project.  Otherwise simply visit the repository and click the `Download Zip` button.  You can also offer feedback on GitHub by opening an Issue.
+The code in the above repository is licensed as fee software:  please feel free to copy and modify it for your own apps.  If you use Git, you could clone the repository into a new R Project.  Otherwise simply visit the repository and click the `Download Zip` button.  You can also offer feedback on GitHub by opening an Issue.  (I do not pretend to mastery of either Shiny or R:  readers are especially encouraged to suggest improvements in the code or to point out errors in my exposition.)
 
 ## Version 1:  The Bare-Bones App
 
