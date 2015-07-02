@@ -1035,17 +1035,14 @@ R Studio provides excellent, up-to-date documentation on Shiny in a series of <a
 * the `show`, `hide` and `toggle` functions.  They come with options for animation, and so allow you to gently disclose or hide various items such as input widgets.
 * the `info` function, to provide a helpful pop-up message.
 
-Dean also has some useful tutorials in the form of blog posts.  See especially:
-
-* <a href = "http://deanattali.com/2015/06/14/mimicking-google-form-shiny/" target = "_blank">Mimicking a Google Form with a Shiny App</a>;
-* <a href = "http://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/" target = "_blank">How to get your very own RStudio Server and Shiny Server with DigitalOcean</a>.  If you run your own Shiny Server at your institution, this post contains great IT advice on how to make Shiny apps run as desired.
+Dean also produces useful Shiny tutorials in the form of blog posts.  Watch for them on <a href = "http://www.r-bloggers.com" target = "_blank">R Bloggers</a> or check his <a href = "http://deanattali.com" target = "_blank">blog</a> directly.
 
 #### Some of My Other Teaching Apps
 
-As you move beyond simulation apps you will want to incorporate other Shiny capabilities.  For example, the following two apps write information to an internal file so that students can compare their work with their classmates:
+As you move beyond simulation apps you will want to incorporate other Shiny capabilities.  For example, the following two apps write information to an internal file so that students can compare their work with their classmates.  Since `shinyapps.io` does not (yet) play well with internal file storage they are not hosted there; if you want to try them out you should run them locally.
 
-* <a href = "http://homer.shinyapps.io/FindRegLine" target = "_blank">FindRegLine</a>
-* <a href = "http://homer.shinyapps.io/GetToKnow" target = "_blank">GetToKnow</a>
+* **Find the Regression Line**:  `shiny::runGitHub("homerhanumat/shinyGC", subdir = "FindRegLine")`
+* **Ice-Breaker Survey**:  `shiny::runGitHub("homerhanumat/shinyGC", subdir = "GetToKnow")`
 
-Source code for the above apps may be examined at my <a href = "https://github.com/homerhanumat/shinyGC" target = "_blank">Shiny-app repostitory on GitHub</a>.
+Of course you should check the source code first to make sure you have installed all of the required packages.  Source code may be examined at my <a href = "https://github.com/homerhanumat/shinyGC" target = "_blank">Shiny-app repository on GitHub</a>.
 
