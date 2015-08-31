@@ -19,11 +19,9 @@ This tutorial assumes that you have:
 
 ## How to View the Tutorial
 
-The tutorial is a `runtime:  shiny` R Markdown document.  I would like to host it that way, but many students from the Coursera Data Science spcialization visit this site and my `shinyapps.io` account is capped at 500 hours per month.  Therefore, in order to view the tutorial you must follow one of the follwogin two procedures.
+The tutorial is a `runtime:  shiny` R Markdown document.  I would like to host it that way, but many students from the Coursera Data Science spcialization visit this site and my `shinyapps.io` account is capped at 500 hours per month.  Therefore, in order to view the tutorial you must run it on your own machine by following one of these two procedures.
 
 ### Git Users
-
-You may view the tutorial on your own machine:
 
 * Clone this repo into your computer (or fork onto your GitHub account and then clone).
 * In the cloned repo, open the directory `sim_tutorial_Rmd` and find the file `tutorial_sim.Rmd`.
