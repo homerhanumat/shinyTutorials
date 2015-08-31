@@ -15,23 +15,27 @@ The aim of this tutorial is to take you step-by-step through the construction of
 This tutorial assumes that you have:
 
 * **familiarity with R**.  We'll assume some basic facility in R programming and that you can at least read and understand R code that creates custom plots in R's base graphics system.  For the most part our explanation of R code will be limited to its relationship to app-building.
-* **an introductory knowledge of Shiny**.  All necessary prerequisites inthis area can be acquired by watching Garret Grolemund's excellent three-part webinar on *How to Start with Shiny*.  (See R Studio's <a href = "http://www.rstudio.com/resources/webinars/" target = "_blank">webinars</a> page.)
+* **an introductory knowledge of Shiny**.  All necessary prerequisites in this area can be acquired by watching Garret Grolemund's excellent three-part webinar on *How to Start with Shiny*.  (See R Studio's <a href = "http://www.rstudio.com/resources/webinars/" target = "_blank">webinars</a> page.)
 
 ## How to View the Tutorial
+
+The tutorial is a `runtime:  shiny` R Markdown document.  I would like to host it that way, but many students from the Coursera Data Science spcialization visit this site and my `shinyapps.io` account is capped at 500 hours per month.  Therefore, in order to view the tutorial you must follow one of the follwogin two procedures.
 
 ### Git Users
 
 You may view the tutorial on your own machine:
 
-* Clone this repo into your computer.
+* Clone this repo into your computer (or fork onto your GitHub account and then clone).
 * In the cloned repo, open the directory `sim_tutorial_Rmd` and find the file `tutorial_sim.Rmd`.
 * Open the file and run it.  (It runs as a local shiny app.)
 * Enjoy!
 
 ### Non-Git Users
 
-If you don't use Git, then you may view the tutorial at the following URL:
+If you don't use Git, then:
 
->[http://homer.shinyapps.io/sim_tutorial_Rmd](http://homer.shinyapps.io/sim_tutorial_Rmd)
-
-**Request**:  The above URL is my `shinyapps` site, for which I get a limited number of user-hours per month.  If you are a GitHub user, then please do not view the tutorial at the above URL.   Instead, view it locally by following the directions for Git users.
+* Download this repo as a zipped file using the Download Zip button on the right above.
+* Extract the repo into a directory of your own choosing.
+* Open RStudio, open the directory `sim_tutorial_Rmd` and find the file `tutorial_sim.Rmd`.
+* Open the file and run it. (It runs as a local shiny app.)
+* Enjoy!

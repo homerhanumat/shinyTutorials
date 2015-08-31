@@ -21,7 +21,7 @@ The aim of this tutorial is to take you step-by-step through the construction of
 This tutorial assumes that you have:
 
 * **familiarity with R**.  We'll assume some basic facility in R programming and that you can at least read and understand R code that creates custom plots in R's base graphics system.  For the most part our explanation of R code will be limited to its relationship to app-building.
-* **an introductory knowledge of Shiny**.  All necessary prerequisites inthis area can be acquired by watching Garret Grolemund's excellent three-part webinar on *How to Start with Shiny*.  (See R Studio's <a href = "http://www.rstudio.com/resources/webinars/" target = "_blank">webinars</a> page.)
+* **an introductory knowledge of Shiny**.  All necessary prerequisites in this area can be acquired by watching Garret Grolemund's excellent three-part webinar on *How to Start with Shiny*.  (See R Studio's <a href = "http://www.rstudio.com/resources/webinars/" target = "_blank">webinars</a> page.)
 
 ### Acquiring Source Code
 
