@@ -19,20 +19,26 @@ This tutorial assumes that you have:
 
 ## How to View the Tutorial
 
-The tutorial is a `runtime:  shiny` R Markdown document.  I would like to host it that way, but many students from the Coursera Data Science spcialization visit this site and my `shinyapps.io` account is capped at 500 hours per month.  Therefore, in order to view the tutorial you must run it on your own machine by following one of these two procedures.
+### Online
 
-**Note added 2020-01-27**.  For a limited time, for the benefit of rstudio::conf 2020 participants, the app is again online at:
+For the benefit of rstudio::conf 2020 participants and for a limited time, the app is again online at:
 
 ><a href="https://homer.shinyapps.io/simTutorials" target="_blank">https://homer.shinyapps.io/simTutorials</a>
 
-### Git Users
+### Locally
+
+You can also run the tutorial on your own machine.  Make sure you have the following packages installed:
+
+```{r}
+install.packages(c("shiny", "scales", "readthedown"))
+```
+
+If you are a user of Git, then:
 
 * Clone this repo into your computer (or fork onto your GitHub account and then clone).
 * In the cloned repo, open the directory `sim_tutorial_Rmd` and find the file `tutorial_sim.Rmd`.
 * Open the file and run it.  (It runs as a local shiny app.)
 * Enjoy!
-
-### Non-Git Users
 
 If you don't use Git, then:
 

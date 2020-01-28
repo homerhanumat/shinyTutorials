@@ -384,22 +384,24 @@ summary {
 </div>
 <div id="how-to-view-the-tutorial" class="section level2">
 <h2>How to View the Tutorial</h2>
-<p>The tutorial is a <code>runtime:  shiny</code> R Markdown document. I would like to host it that way, but many students from the Coursera Data Science spcialization visit this site and my <code>shinyapps.io</code> account is capped at 500 hours per month. Therefore, in order to view the tutorial you must run it on your own machine by following one of these two procedures.</p>
-<p><strong>Note added 2020-01-27</strong>. For a limited time, for the benefit of rstudio::conf 2020 participants, the app is again online at:</p>
+<div id="online" class="section level3">
+<h3>Online</h3>
+<p>For the benefit of rstudio::conf 2020 participants and for a limited time, the app is again online at:</p>
 <blockquote>
 <p><a href="https://homer.shinyapps.io/simTutorials" target="_blank">https://homer.shinyapps.io/simTutorials</a></p>
 </blockquote>
-<div id="git-users" class="section level3">
-<h3>Git Users</h3>
+</div>
+<div id="locally" class="section level3">
+<h3>Locally</h3>
+<p>You can also run the tutorial on your own machine. Make sure you have the following packages installed:</p>
+<pre class="{r}"><code>install.packages(c(&quot;shiny&quot;, &quot;scales&quot;, &quot;readthedown&quot;))</code></pre>
+<p>If you are a user of Git, then:</p>
 <ul>
 <li>Clone this repo into your computer (or fork onto your GitHub account and then clone).</li>
 <li>In the cloned repo, open the directory <code>sim_tutorial_Rmd</code> and find the file <code>tutorial_sim.Rmd</code>.</li>
 <li>Open the file and run it. (It runs as a local shiny app.)</li>
 <li>Enjoy!</li>
 </ul>
-</div>
-<div id="non-git-users" class="section level3">
-<h3>Non-Git Users</h3>
 <p>If you don’t use Git, then:</p>
 <ul>
 <li>Download this repo as a zipped file using the Download Zip button on the right above.</li>
