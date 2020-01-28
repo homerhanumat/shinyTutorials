@@ -21,6 +21,10 @@ This tutorial assumes that you have:
 
 The tutorial is a `runtime:  shiny` R Markdown document.  I would like to host it that way, but many students from the Coursera Data Science spcialization visit this site and my `shinyapps.io` account is capped at 500 hours per month.  Therefore, in order to view the tutorial you must run it on your own machine by following one of these two procedures.
 
+**Note added 2020-01-27**.  For a limited time, for the benefit of rstudio::conf 2020 participants, the app is again online at:
+
+><a href="https://homer.shinyapps.io/simTutorials" target="_blank">https://homer.shinyapps.io/simTutorials</a>
+
 ### Git Users
 
 * Clone this repo into your computer (or fork onto your GitHub account and then clone).

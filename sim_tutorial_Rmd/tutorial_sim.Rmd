@@ -2,11 +2,39 @@
 title: "Building an Instructional Simulation App in Shiny"
 author: "Homer White"
 date: "June 24, 2015"
-output: html_document
+output:
+  html_document:
+    number_sections: no
+    theme: lumen
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      toc_collapsed: yes
 runtime: shiny
+resource_files:
+- dry_bilocation/app.R
+- example_sim_01/app.R
+- example_sim_02/app.R
+- example_sim_03/app.R
+- example_sim_04/app.R
+- example_sim_04/setup.R
+- example_sim_05/app.R
+- example_sim_05/setup.R
+- example_sim_06/app.R
+- example_sim_06/setup.R
+- example_sim_07/server.R
+- example_sim_07/setup.R
+- example_sim_07/ui.R
+- example_sim_07/infoFiles/aboutapp.html
+- example_sim_07/infoFiles/help.html
+- repeating_output/app.R
 ---
 
 ## Introduction and Prerequisites
+
+### Note to Shiny Start to Finish rstudio::conf 2020 Participants
+
+**(Added January 27, 2020.)**  The code below still works, but is dated and limited in various ways. I was still somewhat of a newcomer to programming and my understanding of reactivity was rather incomplete.  Nonetheless I have found that the simple-minded approach outlined below (inputs, a list of reactive values, observers that are reactive on an input and that perform computations to update reactive values, output-rendering observers that are reactive on the reactive values) reliably facilitates production of small-scale but fairly sophisticated apps.  If you are struggling to understand the subtleties of reactivity, you may benefit from study consideration of the first four versions of the app constructed herein.
 
 ### Overview
 
@@ -241,7 +269,7 @@ We have new output, created by a call to `renderTable()`:
     }, include.rownames = FALSE)
 ```
 
-In the above code, the argument `include,rownames` is being passed to an underlying function `xtable()` that creates a formatted table from the data frame `df`.  Setting `include.rownames` to `FALSE` precludes a useless row number from appearing in that table.
+In the above code, the argument `include.rownames` is being passed to an underlying function `xtable()` that creates a formatted table from the data frame `df`.  Setting `include.rownames` to `FALSE` precludes a useless row number from appearing in that table.
 
 ## Version 3:  Conditional Panels
 
@@ -886,7 +914,7 @@ function(input, output, session) {
                  )
 ```
 
-As far the panels themselves are convered, their title can be recognized by R's positional matching of arguments:
+As far the panels themselves are concerned, their title can be recognized by R's positional matching of arguments:
 
 ```{r eval = FALSE}
               tabsetPanel(
@@ -916,7 +944,7 @@ By now the app has gotten become fairly flexible and informative.  Still I'm sur
 
 Sometimes you want the same output to appear in two or more places in your app.  Suppose, for instance, that you want to show a contingency table on two different tab panels in a tab set.  You might try something like this:
 
-```{r echo = FALSE}
+```{r eval = FALSE}
 library(shiny)
 
 ui <- fluidPage(
@@ -944,9 +972,9 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
-The result will be:
+The result probably won't be what you desire:
 
-```{r eval = FALSE}
+```{r echo = FALSE}
 shinyAppDir(
   "repeating_output/",
   options=list(
@@ -955,7 +983,15 @@ shinyAppDir(
 )
 ```
 
-The table fails to show in *both* panels!
+Results may vary a bit from one browser to another, but in many browsers the table fails to show in *both* panels!
+
+The problem is that your calls ui-building Shiny functions have created two HTML elements with the same `id` attribute:
+
+```{r}
+tableOutput("crosstab")
+```
+
+This violates the HTML standards.
 
 To rectify this, you have to create distinct output objects.  If your objects require a lot of code, it's wise follow the DRY (Do not Repeat Yourself), and look for a way to put some of that code into a separate function, which is then called in the code that creates the objects.  In our small example, the DRY approach might look like this:
 
@@ -1008,7 +1044,7 @@ shinyAppDir(
 
 ### Caution:  Colliding CSS in Included HTML
 
-The About and Help files in the final version of the app were generated from R Markdown sources.  The default CSS styling for such documents is a version of Bootstrap, whihc can sometimes conflict with the Bootstrap CSS of the app itself, with bizarre results.  If your app doesn't look right after inclusion of such an HTML file, simply remove the styling from the inlcuded file.  This can be done most conveniently in the R Markdown `yaml` front matter, e.g.:
+The About and Help files in the final version of the app were generated from R Markdown sources.  The default CSS styling for such documents is a version of Bootstrap, which can sometimes conflict with the Bootstrap CSS of the app itself, with bizarre results.  If your app doesn't look right after inclusion of such an HTML file, simply remove the styling from the inlcuded file.  This can be done most conveniently in the R Markdown `yaml` front matter, e.g.:
 
 ```{r eval = FALSE}
 ---
