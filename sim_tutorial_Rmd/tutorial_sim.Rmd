@@ -3,13 +3,9 @@ title: "Building an Instructional Simulation App in Shiny"
 author: "Homer White"
 date: "June 24, 2015"
 output:
-  html_document:
-    number_sections: no
-    theme: lumen
-    toc: yes
-    toc_depth: 3
-    toc_float:
-      toc_collapsed: yes
+  rmdformats::readthedown:
+    highlight: kate
+    toc_depth: 2
 runtime: shiny
 resource_files:
 - dry_bilocation/app.R
